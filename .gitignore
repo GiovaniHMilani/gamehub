@@ -1,0 +1,228 @@
+# ============================================================
+# Dependencies
+# ============================================================
+
+node_modules/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Local credentials / secrets
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+
+# ============================================================
+# Build / Distribution
+# ============================================================
+
+dist/
+dist-electron/
+out/
+build/
+release/
+
+*.asar
+*.asar.unpacked/
+
+# Electron Builder
+electron-builder.yml.local
+electron-builder.json5.local
+
+# ============================================================
+# Vite / Frontend
+# ============================================================
+
+.vite/
+.vite-cache/
+.parcel-cache/
+.cache/
+
+# ============================================================
+# TypeScript
+# ============================================================
+
+*.tsbuildinfo
+
+# ============================================================
+# Testing / Coverage
+# ============================================================
+
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+
+# ============================================================
+# GameHub local application data
+# ============================================================
+
+.gamehub-data/
+gamehub-data/
+session-data/
+sessions/
+browser-data/
+browser-sessions/
+
+# ============================================================
+# SQLite / Local databases
+# ============================================================
+
+*.db
+*.db-shm
+*.db-wal
+
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
+
+# ============================================================
+# Logs
+# ============================================================
+
+*.log
+logs/
+log/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ============================================================
+# Electron / Chromium local data
+# ============================================================
+
+# Chromium/Electron profiles
+Default/
+Local\ State/
+Cookies
+Cookies-journal
+History
+History-journal
+Network/
+GPUCache/
+Code\ Cache/
+Service\ Worker/
+Session\ Storage/
+Sessions/
+Storage/
+
+# ============================================================
+# Temporary files
+# ============================================================
+
+tmp/
+temp/
+.tmp/
+.temp/
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ============================================================
+# OS files
+# ============================================================
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============================================================
+# IDE / Editors
+# ============================================================
+
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+*.iml
+
+# ============================================================
+# ESLint / tooling caches
+# ============================================================
+
+.eslintcache
+.stylelintcache
+.prettier-cache
+
+# ============================================================
+# Generated documentation / artifacts
+# ============================================================
+
+*.generated.*
+*.generated.ts
+*.generated.js
+
+# ============================================================
+# Claude Code local/runtime artifacts
+# ============================================================
+
+# Keep project skills and CLAUDE.md tracked.
+# Ignore local Claude runtime/session artifacts if created.
+
+.claude/cache/
+.claude/tmp/
+.claude/logs/
+
+# ============================================================
+# Local scripts / scratch files
+# ============================================================
+
+scratch/
+sandbox/
+.local/
+
+# ============================================================
+# Generated archives
+# ============================================================
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# ============================================================
+# Crash dumps
+# ============================================================
+
+*.dmp
+*.dump
+
+# ============================================================
+# Misc generated files
+# ============================================================
+
+*.bak
+*.backup
+*.orig
+*.rej
+EOF
