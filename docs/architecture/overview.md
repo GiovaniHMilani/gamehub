@@ -98,7 +98,8 @@ Deliberately **not** persisted:
 - the current URL (may contain OAuth tokens; restore always starts at `startUrl`)
 - runtime state (we persist intent: `restoreOnLaunch`)
 - `sessionStorage` is isolated per instance but, by web semantics, does not
-  survive a restart.
+  survive a restart. Cookies without an expiry do not either (Chromium); see
+  `docs/development/known-limitations.md`.
 
 ---
 
@@ -160,12 +161,18 @@ Per game `allowedOrigins` = origin of `startUrl` + user-added entries
 | top-level navigation elsewhere | blocked + notice (open externally / allow) |
 | subframe navigation | allowed |
 | `window.open` to allowed/auth origin | child BrowserWindow, **same partition**, sandboxed, no preload, closed on stop |
-| `window.open` elsewhere | `shell.openExternal` for http(s) only |
+| `window.open` elsewhere | denied and logged (opening it in the system browser is deferred, ADR-0007) |
 | downloads | cancelled + notice (v1) |
 | permissions | deny except fullscreen, pointerLock, clipboard-sanitized-write |
 
 OAuth popups are the only documented exception to "no BrowserWindow per
 account". No user-agent spoofing or anti-bot bypass.
+
+Popup rules (allowlist per game, limits, session pinning, lifecycle) are in
+ADR-0007. The shell itself is served from `app://gamehub` (ADR-0014) and
+receives sequenced events (ADR-0015). Known limitations, notably session
+cookies across restarts, are in
+[`docs/development/known-limitations.md`](../development/known-limitations.md).
 
 ---
 

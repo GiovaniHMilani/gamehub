@@ -10,10 +10,14 @@ Each phase ends with typecheck + phase tests + a report of what was verified.
   SQLite + Drizzle, SessionManager, InstanceManager (state machine, per-instance
   queue), WindowManager, typed IPC + preload, restore, tombstones, structured
   logging, isolation/persistence/removal/lifecycle/security E2E tests.
-- Not done yet: `app://` protocol for the shell (shell still loads from
-  `file://`), event `seq` for snapshot consistency, OAuth popups, allowed-origin
-  editing, renderer-driven layout (MainWindow/LayoutController split), real UI,
-  measurement, packaging.
+- OAuth/app:///seq phase — done: popup policy and controller (same-session,
+  allowlist, limits, cleanup), shell served from `app://gamehub`, sequenced
+  events with snapshot, removal event.
+- Allowed origins: granted from a blocked-request notice in one click (ADR-0016), live.
+  The manual field was removed; `games.setAllowedOrigins` stays for a future settings UI.
+- Not done yet: a real settings UI to review/revoke them, opening denied
+  links in the system browser, `app_state` / crash-loop guard, renderer-driven
+  layout (MainWindow/LayoutController split), real UI, measurement, packaging.
 
 | Phase | Deliverable | Exit criteria |
 |---|---|---|
