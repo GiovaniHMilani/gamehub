@@ -68,7 +68,7 @@ Game 1───* GameAccount 1───0..1 GameInstance ···> InstanceRuntime
 
 | Entity | Stored in | Key fields |
 |---|---|---|
-| Game | SQLite | name, startUrl (https), allowedOrigins[], backgroundMode |
+| Game | SQLite | name, startUrl (https), allowedOrigins[], description (`backgroundMode` was designed but is not implemented, ADR-0019) |
 | GameAccount | SQLite | gameId, label, color, **partitionId** (immutable, unique) |
 | GameInstance | SQLite | accountId (unique), restoreOnLaunch, muted, zoom, layoutSlot |
 | InstanceRuntime | Main memory | lifecycle state, generation, view, disposables, popups |
@@ -178,8 +178,9 @@ cookies across restarts, are in
 
 ## 8. Background & audio
 
-- `backgroundMode` per game: **economy** (default, Chromium throttling) or
-  **active** (`setBackgroundThrottling(false)`), switchable at runtime.
+- Hidden accounts get Chromium's background throttling (timers ~1/s, no animation frames) with no
+  code of ours: this is the "economy" behaviour, measured in ADR-0019. The designed per-game
+  `backgroundMode` (**active** = `setBackgroundThrottling(false)`) is not implemented.
 - In the 2×2 grid all four views are visible; the mode matters when one
   account is expanded or the window is minimized/occluded.
 - Audio preference (global): **focused only** (default) or **all**; plus a

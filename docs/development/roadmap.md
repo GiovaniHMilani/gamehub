@@ -19,8 +19,9 @@ Each phase ends with typecheck + phase tests + a report of what was verified.
   viewport is requested by the renderer and applied by Main (ADR-0017), dialogs, loading / empty /
   error states, notices and toasts. State is a Zustand read-model over the existing sequenced
   events; styling is plain CSS tokens (ADR-0018).
-- Not done yet: an economy mode for hidden accounts (they currently cost as much as visible ones,
-  ADR-0010 / ADR-0017), events for games, opening denied links in the
+- Phase 7.5 (background cost) — investigated, nothing to build: hidden accounts are already throttled
+  by Chromium (ADR-0019, which corrects the Phase 7 claim). Memory per account is the real cost.
+- Not done yet: events for games, opening denied links in the
   system browser, `app_state` / crash-loop guard, packaging, Windows verification.
 
 | Phase | Deliverable | Exit criteria |

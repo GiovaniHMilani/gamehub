@@ -9,7 +9,7 @@ const NODE_BUILTINS = [
 const nodeImportPatterns = ['node:*', ...NODE_BUILTINS, ...NODE_BUILTINS.map((m) => `${m}/*`)]
 
 export default tseslint.config(
-  { ignores: ['out/**', 'dist/**', 'release/**', 'node_modules/**', 'playwright-report/**', 'test-results/**'] },
+  { ignores: ['out/**', 'dist/**', 'release/**', 'node_modules/**', 'playwright-report/**', 'test-results/**', 'bench/**'] },
   js.configs.recommended,
   ...tseslint.configs.strict,
   {

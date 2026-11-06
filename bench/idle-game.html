@@ -1,0 +1,104 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>bench idle game</title>
+<canvas id="c" width="400" height="260" style="background:#111"></canvas>
+<pre id="out" style="color:#999;font:12px monospace"></pre>
+<script>
+  // A deliberately ordinary idle game: a tick loop, an animation, a socket, periodic saves.
+  // Everything it does is counted so that a "economy" strategy is judged by behaviour,
+  // not by CPU alone (see docs/development/reports/2026-11-07-background-performance.md).
+  const id = new URLSearchParams(location.search).get('id') ?? '0'
+  const s = {
+    id,
+    ticks: 0, // setInterval(100) fires
+    progress: 0, // wall-clock based progress (what a well-written idle game uses)
+    raf: 0,
+    saves: 0,
+    idbWrites: 0,
+    idbReads: 0,
+    heartbeats: 0,
+    wsOpen: 0,
+    wsMsgs: 0,
+    wsCloses: 0,
+    wsState: -1,
+    maxGap: 0, // longest wait between two ticks since the last reset (ms)
+    lastTick: performance.now(),
+    ticksPersisted: 0,
+  }
+  const canvas = document.getElementById('c')
+  const ctx = canvas.getContext('2d')
+  const dots = Array.from({ length: 150 }, (_, i) => ({ x: (i * 37) % 400, y: (i * 53) % 260, vx: 1 + (i % 5), vy: 1 + (i % 3) }))
+
+  function tick() {
+    const now = performance.now()
+    s.maxGap = Math.max(s.maxGap, now - s.lastTick)
+    s.progress += (now - s.lastTick) / 1000
+    s.lastTick = now
+    s.ticks++
+    let x = 0
+    for (let i = 0; i < 20000; i++) x += Math.sqrt(i) // a little game logic
+    s.sink = x
+  }
+  setInterval(tick, 100)
+
+  function frame() {
+    s.raf++
+    ctx.clearRect(0, 0, 400, 260)
+    ctx.fillStyle = '#4af'
+    for (const d of dots) {
+      d.x = (d.x + d.vx) % 400
+      d.y = (d.y + d.vy) % 260
+      ctx.beginPath()
+      ctx.arc(d.x, d.y, 4, 0, 6.28)
+      ctx.fill()
+    }
+    requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+
+  // Persistence: localStorage + IndexedDB, once a second.
+  const dbReq = indexedDB.open('bench', 1)
+  let db = null
+  dbReq.onupgradeneeded = () => dbReq.result.createObjectStore('kv')
+  dbReq.onsuccess = () => {
+    db = dbReq.result
+    const get = db.transaction('kv').objectStore('kv').get('ticks')
+    get.onsuccess = () => (s.ticksPersisted = get.result ?? 0)
+  }
+  setInterval(() => {
+    s.saves++
+    localStorage.setItem('ticks', String(s.ticks))
+    if (db) {
+      const tx = db.transaction('kv', 'readwrite')
+      tx.objectStore('kv').put(s.ticks, 'ticks')
+      tx.oncomplete = () => s.idbWrites++
+    }
+    fetch('/hb?id=' + id + '&vis=' + document.visibilityState + '&ticks=' + s.ticks + '&raf=' + s.raf + '&t=' + Math.round(performance.now()), { cache: 'no-store' }).then(() => s.heartbeats++).catch(() => {})
+  }, 1000)
+
+  // Connection kept alive with a ping every second; reconnects after a drop.
+  function connect() {
+    const ws = new WebSocket('ws://' + location.host + '/ws?id=' + id)
+    ws.onopen = () => {
+      s.wsOpen++
+      s.wsState = 1
+    }
+    ws.onmessage = () => s.wsMsgs++
+    ws.onclose = () => {
+      s.wsCloses++
+      s.wsState = 3
+      setTimeout(connect, 1000)
+    }
+    const timer = setInterval(() => ws.readyState === 1 && ws.send('ping'), 1000)
+    ws.addEventListener('close', () => clearInterval(timer))
+    s.ws = ws
+  }
+  connect()
+
+  window.__bench = (reset) => {
+    const out = { ...s, ws: undefined, sink: undefined, visibility: document.visibilityState, wsState: s.ws ? s.ws.readyState : -1, now: performance.now() }
+    if (reset) s.maxGap = 0
+    return out
+  }
+  setInterval(() => (document.getElementById('out').textContent = JSON.stringify(window.__bench(false))), 1000)
+</script>

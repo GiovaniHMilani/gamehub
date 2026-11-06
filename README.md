@@ -176,8 +176,9 @@ GameHub works end to end on **macOS**. It has **not been tried on Windows** yet,
   alone on purpose. Games that keep you signed in with a normal, lasting login are not affected.
 - **Some sign-in providers refuse embedded browsers** (Google does). GameHub does not disguise itself to get
   around that.
-- **Accounts that are running but hidden cost as much as visible ones.** Hiding a view does not throttle it,
-  so memory and CPU grow with the number of running accounts. There is no economy mode yet.
+- **Running accounts cost memory.** A hidden account is put in the background by Chromium, so its CPU is close
+  to nothing, but its memory is not released: roughly 100-200 MB per account. Ten accounts of a light page
+  take about 1.4 GB. See [ADR-0019](docs/decisions/0019-background-instances.md).
 - Only the first nine running accounts fit in the "all" view of Play.
 
 The full list, with the reasons, is in [`docs/development/known-limitations.md`](docs/development/known-limitations.md).
@@ -186,7 +187,7 @@ The plan and what is done are in [`docs/development/roadmap.md`](docs/developmen
 ## Documentation
 
 - [Architecture overview](docs/architecture/overview.md)
-- [Architecture decisions](docs/decisions/README.md) (ADR-0001 to ADR-0018)
+- [Architecture decisions](docs/decisions/README.md) (ADR-0001 to ADR-0019)
 - [UI design notes](docs/development/ui-design.md)
 - [Known limitations](docs/development/known-limitations.md)
 - [Roadmap](docs/development/roadmap.md)

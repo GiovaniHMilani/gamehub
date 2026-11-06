@@ -22,10 +22,9 @@ Four accounts playing audio at once is noisy. The user wants both as options.
   one account is expanded or the window is minimized/occluded.
 - Exact visibility semantics under `active` must be measured (Phase 9).
 
-## Measured in Phase 7
-Hiding a view with `view.setVisible(false)` does not make Chromium treat the page as
-backgrounded: `visibilityState` stays `visible`, timers keep their normal rate and
-`requestAnimationFrame` keeps firing at the same rate as for a visible view. The
-"economy" mode described above is therefore not in effect today; neither
-`backgroundMode` nor `setBackgroundThrottling` is implemented. See ADR-0017.
-
+## Correction (Phase 7.5)
+The "Measured in Phase 7" note that stood here claimed a hidden view is not backgrounded. It was
+an artifact of measuring through Playwright. In the real application a hidden view IS
+backgrounded: `visibilityState` is `hidden`, timers drop to about 1 per second and
+`requestAnimationFrame` stops. So "economy" is the behaviour today and needs no code.
+`active` (`setBackgroundThrottling(false)`) works as designed but is not implemented. See ADR-0019.

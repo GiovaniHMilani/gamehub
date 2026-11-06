@@ -1,0 +1,97 @@
+{
+  "url": "https://ozh.github.io/cookieclicker/",
+  "electron": "45.2.3",
+  "date": "2026-11-06T15:44:07.508Z",
+  "runs": [
+    {
+      "n": 1,
+      "ready": [
+        true
+      ],
+      "visible": {
+        "vis": [
+          "visible"
+        ],
+        "logicTicksPerS": 30.03662272605474,
+        "cpuPerRenderer": 1.3096944281290663,
+        "cpuTotal": 3.754668185404234,
+        "gpu": 1.6427147352530305,
+        "memTotalMB": 981.5953125,
+        "memPerRendererMB": 186.971875
+      },
+      "hidden": {
+        "vis": [
+          "hidden"
+        ],
+        "logicTicksPerS": 29.93235288249226,
+        "cpuPerRenderer": 0.0370298824936445,
+        "cpuTotal": 0.06669188256222185,
+        "gpu": 0.0009678979959076905,
+        "memTotalMB": 929.7046875,
+        "memPerRendererMB": 189.6296875
+      },
+      "hiddenSystem": {
+        "cpuTotal": 0.06669188256222185,
+        "memTotalMB": 929.7046875
+      },
+      "recovered": {
+        "vis": [
+          "visible"
+        ],
+        "logicTicksPerS": 30.11928032872799,
+        "cpuPerRenderer": 1.3414249441615915,
+        "cpuTotal": 3.9003145546578217,
+        "gpu": 1.7035226807488613,
+        "memTotalMB": 935.69375,
+        "memPerRendererMB": 183.35
+      }
+    },
+    {
+      "n": 5,
+      "ready": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "visible": {
+        "vis": [
+          "visible"
+        ],
+        "logicTicksPerS": 30.02823077117639,
+        "cpuPerRenderer": 0.7071880556777275,
+        "cpuTotal": 7.596480159138987,
+        "gpu": 2.5264993902030213,
+        "memTotalMB": 3058.93125,
+        "memPerRendererMB": 186.1421875
+      },
+      "hidden": {
+        "vis": [
+          "hidden"
+        ],
+        "logicTicksPerS": 29.91183486877856,
+        "cpuPerRenderer": 0.03414611460324124,
+        "cpuTotal": 3.6255224487305115,
+        "gpu": 1.5531387851690095,
+        "memTotalMB": 2798.3734375,
+        "memPerRendererMB": 188.316015625
+      },
+      "hiddenSystem": {
+        "cpuTotal": 3.6255224487305115,
+        "memTotalMB": 2798.3734375
+      },
+      "recovered": {
+        "vis": [
+          "visible"
+        ],
+        "logicTicksPerS": 30.13142097916579,
+        "cpuPerRenderer": 0.6907909034814269,
+        "cpuTotal": 7.777802663622087,
+        "gpu": 2.66432468931973,
+        "memTotalMB": 2766.053125,
+        "memPerRendererMB": 178.43
+      }
+    }
+  ]
+}

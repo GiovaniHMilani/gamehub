@@ -63,12 +63,13 @@ decision with its own ADR and security review, not a global setting.
 
 ## Interface
 
-- **Hidden accounts are not cheap.** Accounts that are running but not on screen (you
-  are on the Library, or on Play showing another one) are hidden, not suspended. They
-  keep their timers AND their animation frames running at the same rate as a visible
-  one, so memory and CPU grow with the number of running accounts, not with the number
-  you are looking at. Measured with a trivial page: about 100 MB per account renderer,
-  about 1.07 GB for 5 accounts plus the shell. There is no economy mode yet (ADR-0010).
+- **Hidden accounts cost memory, not CPU.** A running account that is not on screen is put
+  in the background by Chromium: its timers fire about once a second and animation stops, so
+  an idle page costs a few hundredths of a percent of a core. Its memory is NOT reduced:
+  about 100 MB per renderer for a trivial page and about 190 MB for a real idle game
+  (5 accounts of it ≈ 3 GB in total). Pages that play audio, or games that need full-rate
+  timers while hidden, were not measured (ADR-0019). There is no way to turn the throttling
+  off per game yet.
 - The "All" view on Play shows at most 9 accounts at once (the rest keep running).
 - Games have no change events: the game list is refetched after your own actions and
   when an account of an unknown game appears. A game added or removed by another route

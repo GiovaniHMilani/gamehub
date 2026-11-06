@@ -1,0 +1,3163 @@
+{
+  "meta": {
+    "electron": "45.2.3",
+    "chrome": "156.0.8078.80",
+    "platform": "darwin arm64",
+    "cpus": 10,
+    "sampleSeconds": 8,
+    "ignoreOsOcclusion": true,
+    "date": "2026-11-06T15:02:39.803Z"
+  },
+  "runs": [
+    {
+      "n": 10,
+      "scenario": "detach",
+      "desc": "C. removeChildView (detached from the window)",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r1v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.978795060496445,
+          "progressPerS": 0.9978545590620865,
+          "rafRate": 143.94411874766124,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 1.4058230170349764,
+          "memMB": 99.232421875,
+          "pid": 42434
+        }
+      ],
+      "bg": [
+        {
+          "id": "r1v1",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978046650865052,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01584597661780773,
+          "memMB": 98.478515625,
+          "pid": 42435
+        },
+        {
+          "id": "r1v2",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977547711113882,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016566071207995747,
+          "memMB": 98.30859375,
+          "pid": 42436
+        },
+        {
+          "id": "r1v3",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977048771358069,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01562778043988588,
+          "memMB": 98.556640625,
+          "pid": 42437
+        },
+        {
+          "id": "r1v4",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977921915929581,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.015558969525121633,
+          "memMB": 98.4765625,
+          "pid": 42438
+        },
+        {
+          "id": "r1v5",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978046650865049,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.0158924022941635,
+          "memMB": 98.4765625,
+          "pid": 42439
+        },
+        {
+          "id": "r1v6",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978046650869693,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.015606833990145499,
+          "memMB": 96.98046875,
+          "pid": 42440
+        },
+        {
+          "id": "r1v7",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977672446049352,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01596328517186748,
+          "memMB": 98.1875,
+          "pid": 42441
+        },
+        {
+          "id": "r1v8",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977797180989469,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01561042473969479,
+          "memMB": 98.474609375,
+          "pid": 42442
+        },
+        {
+          "id": "r1v9",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.99772982412383,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01650148184922722,
+          "memMB": 98.509765625,
+          "pid": 42443
+        }
+      ],
+      "system": {
+        "cpuTotal": 4.027108037539296,
+        "cpuBrowser": 0.1575619407059328,
+        "cpuGpu": 2.2601172375531595,
+        "memTotalMB": 1381.11328125
+      },
+      "recovered": [
+        {
+          "id": "r1v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r1v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.975062344139651,
+          "rafRate": 143.89027431421448,
+          "idbWriteRate": 0.9975062344139651,
+          "serverWsRate": 0.9975062344139651,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 183,
+          "ls": 183,
+          "live": 189
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 84,
+          "ls": 84,
+          "live": 90
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 85,
+          "ls": 85,
+          "live": 91
+        },
+        {
+          "idb": 84,
+          "ls": 84,
+          "live": 90
+        },
+        {
+          "idb": 84,
+          "ls": 84,
+          "live": 90
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "zero-bounds",
+      "desc": "D1. bounds 0x0",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r2v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.978795060496445,
+          "progressPerS": 0.997754771111389,
+          "rafRate": 143.94411874766124,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 1.3425942249605634,
+          "memMB": 98.712890625,
+          "pid": 42470
+        }
+      ],
+      "bg": [
+        {
+          "id": "r2v1",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9977672446053998,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016695835419099053,
+          "memMB": 98.052734375,
+          "pid": 42471
+        },
+        {
+          "id": "r2v2",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978171385805163,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016483623373504275,
+          "memMB": 98.05859375,
+          "pid": 42472
+        },
+        {
+          "id": "r2v3",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9979169265312147,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.019053172926484896,
+          "memMB": 98.669921875,
+          "pid": 42473
+        },
+        {
+          "id": "r2v4",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9976799301487134,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1002,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016916459167691647,
+          "memMB": 97.97265625,
+          "pid": 42474
+        },
+        {
+          "id": "r2v5",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.99791692653075,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01695378066276253,
+          "memMB": 98.236328125,
+          "pid": 42475
+        },
+        {
+          "id": "r2v6",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9979543470127843,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016751441657471347,
+          "memMB": 99.86328125,
+          "pid": 42476
+        },
+        {
+          "id": "r2v7",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978545590620863,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.016396256942007324,
+          "memMB": 98.15625,
+          "pid": 42477
+        },
+        {
+          "id": "r2v8",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978545590620862,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.01637283486763647,
+          "memMB": 98.26953125,
+          "pid": 42478
+        },
+        {
+          "id": "r2v9",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9978795060496446,
+          "progressPerS": 0.9978545590620864,
+          "rafRate": 0,
+          "idbWriteRate": 0.9978795060496446,
+          "maxGapMs": 1002,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9978795060496446,
+          "serverWsRate": 0.9978795060496446,
+          "cpu": 0.017092005443681717,
+          "memMB": 99.701171875,
+          "pid": 42479
+        }
+      ],
+      "system": {
+        "cpuTotal": 3.9989974605986522,
+        "cpuBrowser": 0.17829760249891255,
+        "cpuGpu": 2.2651790072257674,
+        "memTotalMB": 1347.51171875
+      },
+      "recovered": [
+        {
+          "id": "r2v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r2v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 92,
+          "ls": 92,
+          "live": 98
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "offscreen",
+      "desc": "D2. bounds moved far outside the window",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r3v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.973818725844657,
+          "progressPerS": 0.9973444707641513,
+          "rafRate": 143.99700785438222,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 1.3708266948627725,
+          "memMB": 99.6328125,
+          "pid": 42485
+        }
+      ],
+      "bg": [
+        {
+          "id": "r3v1",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9972447325767995,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1002,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.0188197231113319,
+          "memMB": 98.458984375,
+          "pid": 42486
+        },
+        {
+          "id": "r3v2",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973694053113369,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1002,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019708897119769208,
+          "memMB": 98.470703125,
+          "pid": 42487
+        },
+        {
+          "id": "r3v3",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973070689438361,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019179452510163262,
+          "memMB": 98.287109375,
+          "pid": 42488
+        },
+        {
+          "id": "r3v4",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973818725844656,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019181799082421628,
+          "memMB": 98.14453125,
+          "pid": 42489
+        },
+        {
+          "id": "r3v5",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9972696671235213,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.022058664147124884,
+          "memMB": 99.1640625,
+          "pid": 42490
+        },
+        {
+          "id": "r3v6",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973195362174292,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019015365500170207,
+          "memMB": 98.208984375,
+          "pid": 42491
+        },
+        {
+          "id": "r3v7",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.997307068943836,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019771327022785178,
+          "memMB": 98.3984375,
+          "pid": 42492
+        },
+        {
+          "id": "r3v8",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973818725844656,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.019854235381958324,
+          "memMB": 98.115234375,
+          "pid": 42493
+        },
+        {
+          "id": "r3v9",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9973818725844656,
+          "progressPerS": 0.9973070689438359,
+          "rafRate": 0,
+          "idbWriteRate": 0.9973818725844656,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9973818725844656,
+          "serverWsRate": 0.9973818725844656,
+          "cpu": 0.020276802560074747,
+          "memMB": 98.31640625,
+          "pid": 42494
+        }
+      ],
+      "system": {
+        "cpuTotal": 4.161422920648825,
+        "cpuBrowser": 0.1774612029124873,
+        "cpuGpu": 2.3695531001949535,
+        "memTotalMB": 1360.9765625
+      },
+      "recovered": [
+        {
+          "id": "r3v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.67672736343226,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.67672736343226,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.67672736343226,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r3v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 100,
+          "ls": 100,
+          "live": 106
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 100,
+          "ls": 100,
+          "live": 106
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 100,
+          "ls": 100,
+          "live": 106
+        },
+        {
+          "idb": 100,
+          "ls": 100,
+          "live": 106
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "css-display-none",
+      "desc": "D3. document display:none inside the page (comparison only)",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r4v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9979540918160893,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.7205025782654944,
+          "memMB": 98.8125,
+          "pid": 42518
+        }
+      ],
+      "bg": [
+        {
+          "id": "r4v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9980414171657612,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.42028851704313724,
+          "memMB": 98.87109375,
+          "pid": 42519
+        },
+        {
+          "id": "r4v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9979665668661751,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.44891688670836694,
+          "memMB": 100.666015625,
+          "pid": 42520
+        },
+        {
+          "id": "r4v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9978917165670529,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.4679758225557988,
+          "memMB": 100.724609375,
+          "pid": 42521
+        },
+        {
+          "id": "r4v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9980414171657626,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.4441438582684279,
+          "memMB": 100.330078125,
+          "pid": 42522
+        },
+        {
+          "id": "r4v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9980289421156762,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.42580876294716674,
+          "memMB": 99.232421875,
+          "pid": 42523
+        },
+        {
+          "id": "r4v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9980289421156764,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.4679170440295396,
+          "memMB": 100.322265625,
+          "pid": 42524
+        },
+        {
+          "id": "r4v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.998016467066054,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.45835434114118556,
+          "memMB": 100.4453125,
+          "pid": 42525
+        },
+        {
+          "id": "r4v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "progressPerS": 0.9980039920159685,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.43069647626121305,
+          "memMB": 100.37109375,
+          "pid": 42526
+        },
+        {
+          "id": "r4v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.104790419161677,
+          "progressPerS": 1.0104291417167526,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "cpu": 0.4353297665479175,
+          "memMB": 99.505859375,
+          "pid": 42527
+        }
+      ],
+      "system": {
+        "cpuTotal": 8.921316609907262,
+        "cpuBrowser": 0.136098829108513,
+        "cpuGpu": 4.008423784891821,
+        "memTotalMB": 1401.501953125
+      },
+      "recovered": [
+        {
+          "id": "r4v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 144.17560488899974,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r4v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "cpu-throttle-10",
+      "desc": "E1. CDP Emulation.setCPUThrottlingRate 10 (page keeps running, slower)",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r5v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9961888155439332,
+          "rafRate": 143.97807946195044,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 0.6256356040207472,
+          "memMB": 98.45703125,
+          "pid": 42550
+        }
+      ],
+      "bg": [
+        {
+          "id": "r5v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9967617386972222,
+          "rafRate": 143.85353095030516,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 108,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.390252215519718,
+          "memMB": 100.693359375,
+          "pid": 42551
+        },
+        {
+          "id": "r5v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9959770830742295,
+          "rafRate": 143.60443392701458,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 109,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.432514095233651,
+          "memMB": 100.560546875,
+          "pid": 42552
+        },
+        {
+          "id": "r5v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9963382737573493,
+          "rafRate": 143.60443392701458,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 108,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.437803738640742,
+          "memMB": 100.544921875,
+          "pid": 42553
+        },
+        {
+          "id": "r5v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9972474778929172,
+          "rafRate": 143.72898243865987,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 108,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.402893914192845,
+          "memMB": 100.62109375,
+          "pid": 42554
+        },
+        {
+          "id": "r5v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9962884543528776,
+          "rafRate": 143.85353095030516,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 110,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.448375156001461,
+          "memMB": 100.517578125,
+          "pid": 42555
+        },
+        {
+          "id": "r5v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9961140864367601,
+          "rafRate": 143.72898243865987,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 108,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.446115643968483,
+          "memMB": 100.55859375,
+          "pid": 42556
+        },
+        {
+          "id": "r5v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9964379125672232,
+          "rafRate": 143.60443392701458,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 109,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.428361967061333,
+          "memMB": 100.49609375,
+          "pid": 42557
+        },
+        {
+          "id": "r5v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9965998256319913,
+          "rafRate": 143.85353095030516,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 109,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.456835000295154,
+          "memMB": 100.5234375,
+          "pid": 42558
+        },
+        {
+          "id": "r5v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.963880931622867,
+          "progressPerS": 0.9962884543528779,
+          "rafRate": 143.72898243865987,
+          "idbWriteRate": 0.9963880931622867,
+          "maxGapMs": 107,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9963880931622867,
+          "serverWsRate": 0.9963880931622867,
+          "cpu": 9.407993817489272,
+          "memMB": 100.74609375,
+          "pid": 42559
+        }
+      ],
+      "system": {
+        "cpuTotal": 90.88317023429137,
+        "cpuBrowser": 0.09991041424308389,
+        "cpuGpu": 5.257993024520602,
+        "memTotalMB": 1409.72265625
+      },
+      "recovered": [
+        {
+          "id": "r5v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.2269892741332,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r5v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.977550511349463,
+          "rafRate": 143.926166126216,
+          "idbWriteRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 197
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 197
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 197
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 197
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "hidden+frozen",
+      "desc": "E2. hidden + CDP Page.setWebLifecycleState frozen",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r6v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 11.845386533665836,
+          "progressPerS": 1.1846259351620025,
+          "rafRate": 170.82294264339154,
+          "idbWriteRate": 1.1221945137157108,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 1.371571072319202,
+          "serverWsRate": 1.371571072319202,
+          "cpu": 1.5048078877837625,
+          "memMB": 98.896484375,
+          "pid": 42570
+        }
+      ],
+      "bg": [
+        {
+          "id": "r6v1",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00036794495527277726,
+          "memMB": 99.6484375,
+          "pid": 42571
+        },
+        {
+          "id": "r6v2",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00036296617382714695,
+          "memMB": 99.62890625,
+          "pid": 42572
+        },
+        {
+          "id": "r6v3",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00029188609955133575,
+          "memMB": 99.5703125,
+          "pid": 42573
+        },
+        {
+          "id": "r6v4",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.0003031173989757232,
+          "memMB": 99.39453125,
+          "pid": 42574
+        },
+        {
+          "id": "r6v5",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00030934724880721216,
+          "memMB": 99.44140625,
+          "pid": 42575
+        },
+        {
+          "id": "r6v6",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00031434412560231624,
+          "memMB": 99.3984375,
+          "pid": 42576
+        },
+        {
+          "id": "r6v7",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.0003355196305426809,
+          "memMB": 99.56640625,
+          "pid": 42577
+        },
+        {
+          "id": "r6v8",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.0003043695107845514,
+          "memMB": 99.50390625,
+          "pid": 42578
+        },
+        {
+          "id": "r6v9",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.000330569456392403,
+          "memMB": 99.31640625,
+          "pid": 42579
+        }
+      ],
+      "system": {
+        "cpuTotal": 3.9987302599617056,
+        "cpuBrowser": 0.07393371971687154,
+        "cpuGpu": 2.4018677158424238,
+        "memTotalMB": 1408.51953125
+      },
+      "recovered": [
+        {
+          "id": "r6v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r6v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.980039920159681,
+          "rafRate": 143.96207584830339,
+          "idbWriteRate": 0.998003992015968,
+          "serverWsRate": 0.998003992015968,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 220,
+          "ls": 220,
+          "live": 226
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "detach+frozen",
+      "desc": "E3. detached + CDP frozen",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r7v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 11.84686369871555,
+          "progressPerS": 1.184698840254118,
+          "rafRate": 170.844244918319,
+          "idbWriteRate": 1.122334455667789,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 1.3717421124828533,
+          "serverWsRate": 1.3717421124828533,
+          "cpu": 1.4778209816393413,
+          "memMB": 98.826171875,
+          "pid": 42588
+        }
+      ],
+      "bg": [
+        {
+          "id": "r7v1",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00026952894761062853,
+          "memMB": 99.31640625,
+          "pid": 42589
+        },
+        {
+          "id": "r7v2",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00028449675434085835,
+          "memMB": 99.51953125,
+          "pid": 42590
+        },
+        {
+          "id": "r7v3",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00025329762814402224,
+          "memMB": 99.4453125,
+          "pid": 42591
+        },
+        {
+          "id": "r7v4",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00022708860959018567,
+          "memMB": 99.34765625,
+          "pid": 42592
+        },
+        {
+          "id": "r7v5",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00021460369567893056,
+          "memMB": 99.51953125,
+          "pid": 42593
+        },
+        {
+          "id": "r7v6",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.0002183521525789942,
+          "memMB": 99.70703125,
+          "pid": 42594
+        },
+        {
+          "id": "r7v7",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00026951152010770447,
+          "memMB": 99.53515625,
+          "pid": 42595
+        },
+        {
+          "id": "r7v8",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.000229581003811264,
+          "memMB": 99.5859375,
+          "pid": 42596
+        },
+        {
+          "id": "r7v9",
+          "reachable": false,
+          "visibility": null,
+          "tickRate": null,
+          "progressPerS": null,
+          "rafRate": null,
+          "idbWriteRate": null,
+          "maxGapMs": null,
+          "wsState": null,
+          "wsReconnects": null,
+          "serverHbRate": 0,
+          "serverWsRate": 0,
+          "cpu": 0.00019963528607307282,
+          "memMB": 99.55078125,
+          "pid": 42597
+        }
+      ],
+      "system": {
+        "cpuTotal": 3.986114285961486,
+        "cpuBrowser": 0.07038100701475378,
+        "cpuGpu": 2.418106678128384,
+        "memTotalMB": 1420.5390625
+      },
+      "recovered": [
+        {
+          "id": "r7v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r7v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.7484402295982,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 220,
+          "ls": 220,
+          "live": 226
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        },
+        {
+          "idb": 91,
+          "ls": 91,
+          "live": 97
+        },
+        {
+          "idb": 90,
+          "ls": 90,
+          "live": 96
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "frame-rate-1",
+      "desc": "E4. contents.setFrameRate(1)",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r8v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.9981534622581726,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 102,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8416308157293697,
+          "memMB": 98.701171875,
+          "pid": 42603
+        }
+      ],
+      "bg": [
+        {
+          "id": "r8v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.9980162195879925,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8332412960858543,
+          "memMB": 98.50390625,
+          "pid": 42604
+        },
+        {
+          "id": "r8v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.106051154086089,
+          "progressPerS": 1.0105801621959765,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8466833248701477,
+          "memMB": 98.658203125,
+          "pid": 42605
+        },
+        {
+          "id": "r8v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.9982657517157201,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8233353531329802,
+          "memMB": 98.51953125,
+          "pid": 42606
+        },
+        {
+          "id": "r8v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.9981659388647217,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8171128674872238,
+          "memMB": 98.591796875,
+          "pid": 42607
+        },
+        {
+          "id": "r8v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.997991266375826,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8234069236203109,
+          "memMB": 98.681640625,
+          "pid": 42608
+        },
+        {
+          "id": "r8v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.981285090455396,
+          "progressPerS": 0.9982532751091711,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8547071276018376,
+          "memMB": 98.5546875,
+          "pid": 42609
+        },
+        {
+          "id": "r8v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.106051154086089,
+          "progressPerS": 1.0105926388020603,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8395352441225266,
+          "memMB": 98.57421875,
+          "pid": 42610
+        },
+        {
+          "id": "r8v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.106051154086089,
+          "progressPerS": 1.0105801621959758,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8180623548935259,
+          "memMB": 98.521484375,
+          "pid": 42611
+        },
+        {
+          "id": "r8v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 10.106051154086089,
+          "progressPerS": 1.0105926388020599,
+          "rafRate": 143.98003742981908,
+          "idbWriteRate": 0.9981285090455395,
+          "maxGapMs": 101,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9981285090455395,
+          "serverWsRate": 0.9981285090455395,
+          "cpu": 0.8613702534739063,
+          "memMB": 98.640625,
+          "pid": 42612
+        }
+      ],
+      "system": {
+        "cpuTotal": 13.663800066025894,
+        "cpuBrowser": 0.14017907895600332,
+        "cpuGpu": 5.094379951814488,
+        "memTotalMB": 1425.287109375
+      },
+      "recovered": [
+        {
+          "id": "r8v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r8v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        },
+        {
+          "idb": 190,
+          "ls": 190,
+          "live": 196
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "scenario": "window-minimized",
+      "desc": "F. whole window minimised (all views; what the OS-level case does)",
+      "uniquePids": 10,
+      "fg": [
+        {
+          "id": "r9v0",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9977675230728067,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.019825326547108037,
+          "memMB": 98.1953125,
+          "pid": 42620
+        }
+      ],
+      "bg": [
+        {
+          "id": "r9v1",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9978672985784779,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.026487972650229445,
+          "memMB": 98.611328125,
+          "pid": 42621
+        },
+        {
+          "id": "r9v2",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9978298827639673,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.018994220935962317,
+          "memMB": 98.3359375,
+          "pid": 42622
+        },
+        {
+          "id": "r9v3",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9976677475680649,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1000,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.02049102303666868,
+          "memMB": 98.173828125,
+          "pid": 42623
+        },
+        {
+          "id": "r9v4",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9978548266401526,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.01947295422445936,
+          "memMB": 98.1484375,
+          "pid": 42624
+        },
+        {
+          "id": "r9v5",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9977425791970859,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.02000789457148699,
+          "memMB": 98.205078125,
+          "pid": 42625
+        },
+        {
+          "id": "r9v6",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9977675230728069,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.020288657231638314,
+          "memMB": 98.091796875,
+          "pid": 42626
+        },
+        {
+          "id": "r9v7",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9976677475680648,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1002,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.01942667009754061,
+          "memMB": 98.447265625,
+          "pid": 42627
+        },
+        {
+          "id": "r9v8",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9977675230732713,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.019342694661777356,
+          "memMB": 98.1796875,
+          "pid": 42628
+        },
+        {
+          "id": "r9v9",
+          "reachable": true,
+          "visibility": "hidden",
+          "tickRate": 0.9977550511349463,
+          "progressPerS": 0.9976802195059253,
+          "rafRate": 0,
+          "idbWriteRate": 0.9977550511349463,
+          "maxGapMs": 1001,
+          "wsState": 1,
+          "wsReconnects": 0,
+          "serverHbRate": 0.9977550511349463,
+          "serverWsRate": 0.9977550511349463,
+          "cpu": 0.019823632139513922,
+          "memMB": 98.212890625,
+          "pid": 42629
+        }
+      ],
+      "system": {
+        "cpuTotal": 0.41902378456923406,
+        "cpuBrowser": 0.14704930775782288,
+        "cpuGpu": 0.005786270507077483,
+        "memTotalMB": 1424.478515625
+      },
+      "recovered": [
+        {
+          "id": "r9v0",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v1",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v2",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v3",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v4",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v5",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v6",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v7",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v8",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        },
+        {
+          "id": "r9v9",
+          "reachable": true,
+          "visibility": "visible",
+          "tickRate": 9.982530571499876,
+          "rafRate": 143.9980034938857,
+          "idbWriteRate": 0.9982530571499876,
+          "serverWsRate": 0.9982530571499876,
+          "wsState": 1,
+          "boundsOk": true
+        }
+      ],
+      "persistence": [
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        },
+        {
+          "idb": 101,
+          "ls": 101,
+          "live": 107
+        }
+      ]
+    }
+  ]
+}

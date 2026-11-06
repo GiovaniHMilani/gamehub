@@ -42,10 +42,7 @@ Only the renderer knows where the viewport is (it is laid out by CSS).
   malformed or hostile layout cannot move a view outside the window.
 - Negative: a layout request is lost-safe but not acknowledged; the E2E suite asserts the result by
   reading the real view bounds from Main.
-- Measured (Electron 45): `view.setVisible(false)` does NOT put a page in the
-  background. A hidden view keeps `visibilityState === "visible"`, its timers run
-  at full rate (10/s for a 100 ms interval) and `requestAnimationFrame` keeps
-  firing (~144/s). So hidden games keep progressing (good for idle games) but cost
-  as much as visible ones (bad for many accounts). ADR-0010's "economy" throttling
-  is therefore NOT in effect; implementing it is future work and must be tested
-  against real games.
+- ~~Measured (Electron 45): a hidden view keeps `visibilityState === "visible"`...~~ **Wrong.** That
+  measurement went through Playwright, which attaches to every page and alters visibility. In
+  the real app a hidden view is backgrounded: `hidden`, ~1 timer fire/s, no animation frames.
+  See ADR-0019.
