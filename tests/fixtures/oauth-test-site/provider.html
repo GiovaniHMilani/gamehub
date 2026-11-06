@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Test Identity Provider</title></head>
+  <body>
+    <h1>Test Identity Provider</h1>
+    <p>Pretends to be an OAuth provider on a different origin than the game.</p>
+    <dl>
+      <dt>Provider cookie</dt><dd id="provider-cookie">…</dd>
+      <dt>Provider cookie as seen by the provider server</dt><dd id="provider-server">…</dd>
+      <dt>Provider localStorage</dt><dd id="provider-ls">…</dd>
+      <dt>Provider IndexedDB</dt><dd id="provider-idb">…</dd>
+    </dl>
+    <label>Account <input id="user" aria-label="Account" /></label>
+    <button id="signin">Sign in</button>
+    <script>
+      const DB = 'provider-db', STORE = 'kv'
+      const params = new URLSearchParams(location.search)
+      const readCookie = (n) => { const h = document.cookie.split('; ').find((c) => c.startsWith(n + '=')); return h ? decodeURIComponent(h.slice(n.length + 1)) : null }
+      const openDb = () => new Promise((res, rej) => { const r = indexedDB.open(DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(STORE); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) })
+      const idbGet = async (k) => { const db = await openDb(); return new Promise((res, rej) => { const r = db.transaction(STORE).objectStore(STORE).get(k); r.onsuccess = () => { db.close(); res(r.result ?? null) }; r.onerror = () => { db.close(); rej(r.error) } }) }
+      const idbSet = async (k, v) => { const db = await openDb(); return new Promise((res, rej) => { const t = db.transaction(STORE, 'readwrite'); t.objectStore(STORE).put(v, k); t.oncomplete = () => { db.close(); res() }; t.onerror = () => { db.close(); rej(t.error) } }) }
+
+      async function providerSnapshot() {
+        const me = await fetch('/me', { cache: 'no-store' }).then((r) => r.json())
+        return { cookie: readCookie('provider_user'), serverCookie: me.user, localStorage: localStorage.getItem('provider_user'), indexedDB: await idbGet('provider_user') }
+      }
+      async function render() {
+        const s = await providerSnapshot()
+        const show = (id, v) => { document.getElementById(id).textContent = v === null ? '(none)' : v }
+        show('provider-cookie', s.cookie); show('provider-server', s.serverCookie); show('provider-ls', s.localStorage); show('provider-idb', s.indexedDB)
+        document.body.dataset.ready = 'true'
+      }
+      async function signIn(user) {
+        document.cookie = 'provider_user=' + encodeURIComponent(user) + '; path=/; max-age=31536000; SameSite=Lax'
+        localStorage.setItem('provider_user', user)
+        await idbSet('provider_user', user)
+        // Standard authorization-code redirect back to the game.
+        const target = new URL(params.get('redirect_uri'))
+        target.searchParams.set('code', 'code-for-' + user)
+        target.searchParams.set('state', params.get('state') ?? '')
+        location.href = target.toString()
+      }
+      window.providerSnapshot = providerSnapshot
+      document.getElementById('signin').addEventListener('click', () => signIn(document.getElementById('user').value))
+      render()
+    </script>
+  </body>
+</html>

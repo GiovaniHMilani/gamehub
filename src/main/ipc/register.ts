@@ -2,23 +2,36 @@ import { ipcMain, type BrowserWindow, type IpcMainInvokeEvent } from 'electron'
 import type { z } from 'zod'
 import type { Game, GameSummary, InstanceSummary } from '@shared/domain/types'
 import { IPC } from '@shared/ipc/channels'
+import type { InstancesSnapshot } from '@shared/ipc/instance-events'
 import type { ErrorCode, Result } from '@shared/ipc/result'
-import { createGameSchema, createInstanceSchema, instanceRefSchema } from '@shared/ipc/schemas'
+import { createGameSchema, createInstanceSchema, instanceRefSchema, resolveNoticeSchema, setAllowedOriginsSchema } from '@shared/ipc/schemas'
 import { DomainError } from '../errors'
 import type { InstanceManager } from '../instances/instance-manager'
 import type { Logger } from '../logging/logger'
 import type { Repositories } from '../persistence/repositories'
+import type { InstanceEventPublisher } from './event-publisher'
+import type { NoticeBroker } from '../notices/notice-broker'
 import type { ManagedSession } from '../browser-sessions/session-manager'
+import { isTrustedShellUrl } from '../security/shell-origin'
 
 export interface IpcDeps<S extends ManagedSession> {
   getShellWindow(): BrowserWindow | null
   manager: InstanceManager<S>
+  publisher: InstanceEventPublisher
+  notices: NoticeBroker
   repos: Repositories
   log: Logger
+  /** Vite dev server URL; only set when running unpackaged with HMR. */
+  devServerUrl?: string | undefined
   now?: () => number
 }
 
-const toGameSummary = (game: Game): GameSummary => ({ id: game.id, name: game.name, startUrl: game.startUrl })
+const toGameSummary = (game: Game): GameSummary => ({
+  id: game.id,
+  name: game.name,
+  startUrl: game.startUrl,
+  allowedOrigins: game.allowedOrigins,
+})
 
 /**
  * Registers the complete, fixed set of IPC handlers (ADR-0005).
@@ -28,13 +41,16 @@ const toGameSummary = (game: Game): GameSummary => ({ id: game.id, name: game.na
  * channel constant, a schema and a line here.
  */
 export function registerIpc<S extends ManagedSession>(deps: IpcDeps<S>): () => void {
-  const { manager, repos, log } = deps
+  const { manager, publisher, notices, repos, log } = deps
   const now = deps.now ?? Date.now
 
   /** Only the shell's main frame may call us; game views have no bridge at all. */
   const isShellSender = (event: IpcMainInvokeEvent): boolean => {
     const shell = deps.getShellWindow()
-    return shell !== null && !shell.isDestroyed() && event.senderFrame !== null && event.senderFrame === shell.webContents.mainFrame
+    if (shell === null || shell.isDestroyed()) return false
+    const frame = event.senderFrame
+    // Same frame as the shell's main frame AND still showing the trusted shell page.
+    return frame !== null && frame === shell.webContents.mainFrame && isTrustedShellUrl(frame.url, deps.devServerUrl)
   }
 
   const fail = (code: ErrorCode, message: string): Result<never> => ({ ok: false, error: { code, message } })
@@ -73,10 +89,30 @@ export function registerIpc<S extends ManagedSession>(deps: IpcDeps<S>): () => v
   }
 
   handleNoInput(IPC.gamesList, () => repos.games.list().map(toGameSummary))
+  handleNoInput(IPC.noticesList, () => notices.list())
+  handle(IPC.noticesResolve, resolveNoticeSchema, (input) => {
+    notices.resolve(input.noticeId, input.decision)
+    return null
+  })
+  handle(IPC.gamesSetAllowedOrigins, setAllowedOriginsSchema, (input) => {
+    const game = repos.games.setAllowedOrigins(input.gameId, input.allowedOrigins, now())
+    if (game === undefined) throw new DomainError('NOT_FOUND', 'Game not found')
+    log.info('game.allowed_origins_changed', { gameId: game.id, count: game.allowedOrigins.length })
+    manager.applyAllowedOrigins(game.id)
+    notices.reconcile(game.id)
+    return toGameSummary(game)
+  })
   handle(IPC.gamesCreate, createGameSchema, (input) =>
-    toGameSummary(repos.games.create({ id: crypto.randomUUID(), name: input.name, startUrl: input.startUrl }, now())),
+    toGameSummary(
+      repos.games.create(
+        { id: crypto.randomUUID(), name: input.name, startUrl: input.startUrl, allowedOrigins: input.allowedOrigins ?? [] },
+        now(),
+      ),
+    ),
   )
   handleNoInput(IPC.instancesList, (): InstanceSummary[] => manager.list())
+  // seq and state are read in the same synchronous tick: the snapshot is consistent with that seq.
+  handleNoInput(IPC.instancesSnapshot, (): InstancesSnapshot => ({ seq: publisher.currentSeq, instances: manager.list() }))
   handle(IPC.instancesGet, instanceRefSchema, (input) => manager.get(input.instanceId))
   handle(IPC.instancesCreate, createInstanceSchema, (input) => manager.createInstance(input))
   handle(IPC.instancesStart, instanceRefSchema, (input) => manager.start(input.instanceId))

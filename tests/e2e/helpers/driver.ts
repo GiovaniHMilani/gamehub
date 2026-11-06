@@ -35,8 +35,9 @@ export class Driver {
     return new Driver(launched.app, shell, launched.userDataDir)
   }
 
-  createGame(name: string, startUrl: string): Promise<GameSummary> {
-    return this.shell.evaluate((input) => window.gamehub.games.create(input), { name, startUrl }).then(unwrap)
+  createGame(name: string, startUrl: string, allowedOrigins?: readonly string[]): Promise<GameSummary> {
+    const input = allowedOrigins === undefined ? { name, startUrl } : { name, startUrl, allowedOrigins: [...allowedOrigins] }
+    return this.shell.evaluate((i) => window.gamehub.games.create(i), input).then(unwrap)
   }
 
   createInstance(gameId: string, label: string): Promise<InstanceSummary> {
@@ -106,11 +107,15 @@ export class Driver {
     return readFile(join(this.userDataDir, 'logs', 'gamehub.log'), 'utf8').catch(() => '')
   }
 
-  async logEvents(): Promise<string[]> {
+  async logRecords(): Promise<Array<Record<string, unknown>>> {
     return (await this.readLog())
       .split('\n')
       .filter(Boolean)
-      .map((line) => (JSON.parse(line) as { event: string }).event)
+      .map((line) => JSON.parse(line) as Record<string, unknown>)
+  }
+
+  async logEvents(): Promise<string[]> {
+    return (await this.logRecords()).map((record) => String(record['event']))
   }
 
   close(): Promise<void> {

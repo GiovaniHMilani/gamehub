@@ -270,6 +270,32 @@ describe('remove', () => {
   })
 })
 
+describe('allowed origins', () => {
+  it('pushes the new list to live views of that game only', async () => {
+    const other = h.repos.games.create({ id: crypto.randomUUID(), name: 'Other', startUrl: 'https://other.example/' }, Date.now())
+    const a = create('A')
+    const stopped = create('Stopped')
+    const b = h.manager.createInstance({ gameId: other.id, label: 'B' })
+    await h.manager.start(a.id)
+    await h.manager.start(b.id)
+
+    h.repos.games.setAllowedOrigins(h.gameId, ['https://accounts.google.com', 'https://discord.com'], Date.now())
+    h.manager.applyAllowedOrigins(h.gameId)
+
+    expect(h.host.originUpdates).toEqual([
+      { instanceId: a.id, origins: ['https://game.example', 'https://accounts.google.com', 'https://discord.com'] },
+    ])
+    expect(h.host.originUpdates.some((u) => u.instanceId === stopped.id || u.instanceId === b.id)).toBe(false)
+  })
+
+  it('a view started afterwards is mounted with the saved list', async () => {
+    const a = create('A')
+    h.repos.games.setAllowedOrigins(h.gameId, ['https://discord.com'], Date.now())
+    await h.manager.start(a.id)
+    expect(h.host.originsByInstance.get(a.id)).toEqual(['https://game.example', 'https://discord.com'])
+  })
+})
+
 describe('restore and shutdown', () => {
   it('restore starts only instances flagged restoreOnLaunch', async () => {
     const a = create('A')

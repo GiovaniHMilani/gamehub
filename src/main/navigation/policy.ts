@@ -1,13 +1,17 @@
+import { matchesAnyOrigin } from '@shared/domain/origin-pattern'
+
 /**
  * Navigation policy for game views (ADR-0007). Pure: decides, never acts.
  *
- * Top-level navigation stays inside the view only for the game's allowed
- * origins. Everything else is blocked. OAuth popups and "open externally"
- * arrive with the navigation phase; until then they are denied, not guessed.
+ * Top-level navigation stays inside a view only for the game's allowed origins:
+ * the origin of its start URL plus the origin patterns configured on the game
+ * (typically its OAuth provider). Everything else is blocked.
  */
 
-export function allowedOriginsFor(startUrl: string): string[] {
-  return [new URL(startUrl).origin]
+/** Allowed origin patterns for a game: its own origin first, then the configured extras. */
+export function allowedOriginsFor(startUrl: string, extra: readonly string[] = []): string[] {
+  const own = new URL(startUrl).origin
+  return [own, ...extra.filter((origin) => origin !== own)]
 }
 
 export function isAllowedTopLevelNavigation(target: string, allowedOrigins: readonly string[]): boolean {
@@ -18,5 +22,7 @@ export function isAllowedTopLevelNavigation(target: string, allowedOrigins: read
     return false
   }
   if (url.protocol !== 'https:' && url.protocol !== 'http:') return false
-  return allowedOrigins.includes(url.origin)
+  // Same rule as popups: credentials embedded in a URL are never navigated to.
+  if (url.username !== '' || url.password !== '') return false
+  return matchesAnyOrigin(target, allowedOrigins)
 }

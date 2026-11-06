@@ -19,14 +19,23 @@ export interface NewAccountIds {
 export class GameRepository {
   constructor(private readonly db: Db) {}
 
-  create(game: Omit<Game, 'createdAt' | 'updatedAt'>, now: number): Game {
-    const row = { ...game, createdAt: now, updatedAt: now }
+  create(
+    game: { id: string; name: string; startUrl: string; allowedOrigins?: readonly string[] },
+    now: number,
+  ): Game {
+    const row = { ...game, allowedOrigins: [...(game.allowedOrigins ?? [])], createdAt: now, updatedAt: now }
     this.db.insert(games).values(row).run()
     return row
   }
 
   get(id: string): Game | undefined {
     return this.db.select().from(games).where(eq(games.id, id)).get()
+  }
+
+  /** Returns the updated game, or undefined if it does not exist. */
+  setAllowedOrigins(id: string, allowedOrigins: readonly string[], now: number): Game | undefined {
+    this.db.update(games).set({ allowedOrigins: [...allowedOrigins], updatedAt: now }).where(eq(games.id, id)).run()
+    return this.get(id)
   }
 
   list(): Game[] {

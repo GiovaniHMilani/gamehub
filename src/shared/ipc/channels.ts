@@ -3,9 +3,13 @@
  * Plain constants only: the preload imports this file, so it must stay tiny.
  */
 export const IPC = {
+  noticesList: 'notices:list',
+  noticesResolve: 'notices:resolve',
   gamesCreate: 'games:create',
   gamesList: 'games:list',
+  gamesSetAllowedOrigins: 'games:setAllowedOrigins',
   instancesList: 'instances:list',
+  instancesSnapshot: 'instances:snapshot',
   instancesGet: 'instances:get',
   instancesCreate: 'instances:create',
   instancesStart: 'instances:start',
@@ -15,5 +19,6 @@ export const IPC = {
 } as const
 
 export const EVENTS = {
-  instancesChanged: 'instances:changed',
+  instancesEvent: 'instances:event',
+  noticesChanged: 'notices:changed',
 } as const

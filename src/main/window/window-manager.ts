@@ -1,7 +1,10 @@
 import { BrowserWindow, WebContentsView, type Session, type WebContents } from 'electron'
 import { join } from 'node:path'
 import type { Logger } from '../logging/logger'
+import type { BlockedHandler } from '../navigation/blocked'
 import { isAllowedTopLevelNavigation } from '../navigation/policy'
+import { PopupController } from './popup-controller'
+import { SHELL_ENTRY_URL } from '../platform/app-assets'
 import {
   LoadAbortedError,
   LoadFailedError,
@@ -10,14 +13,20 @@ import {
   type ViewHost,
 } from '../instances/ports'
 
-/** Height reserved for the shell's own UI strip; game views sit below it. */
-const CHROME_HEIGHT = 64
+/**
+ * Height reserved for the shell's own UI strip; game views sit below it.
+ * Keep in sync with the strip's height in src/renderer/app/App.tsx.
+ */
+const CHROME_HEIGHT = 96
 
 interface ManagedView {
   readonly view: WebContentsView
   /** Kept separately: `view.webContents` is undefined once closed (spike S4). */
   readonly contents: WebContents
   readonly goneListeners: Set<(reason: string) => void>
+  /** Shared by the navigation guards and the popup controller; replaced on live updates. */
+  readonly origins: { current: readonly string[] }
+  readonly popups: PopupController
   readonly removeContentsListeners: () => void
 }
 
@@ -33,6 +42,9 @@ interface ManagedView {
 export class WindowManager implements ViewHost<Session> {
   private window: BrowserWindow | null = null
   private readonly views = new Map<string, ManagedView>()
+
+  /** Set by the composition root: where "blocked, ask the user" requests go (ADR-0016). */
+  blockedHandler: BlockedHandler | undefined
 
   constructor(private readonly log: Logger) {}
 
@@ -77,11 +89,13 @@ export class WindowManager implements ViewHost<Session> {
       }
     })
 
+    // Dev: the Vite server (HMR). Everything else, including tests and packaged
+    // builds: the built shell served by the app:// protocol, never file://.
     const devServerUrl = process.env['ELECTRON_RENDERER_URL']
     if (devServerUrl !== undefined && devServerUrl !== '') {
       void window.loadURL(devServerUrl)
     } else {
-      void window.loadFile(join(import.meta.dirname, '../renderer/index.html'))
+      void window.loadURL(SHELL_ENTRY_URL)
     }
     return window
   }
@@ -107,17 +121,36 @@ export class WindowManager implements ViewHost<Session> {
     const contents = view.webContents
     const goneListeners = new Set<(reason: string) => void>()
 
-    contents.setWindowOpenHandler(({ url }) => {
-      this.log.warn('navigation.popup_denied', { instanceId, url })
-      return { action: 'deny' }
+    // Popups: validated, same-session, limited and cleaned up by the controller (ADR-0007).
+    const origins = { current: allowedOrigins }
+    const popups = new PopupController({
+      instanceId,
+      opener: contents,
+      session,
+      parent: window,
+      getAllowedOrigins: () => origins.current,
+      log: this.log,
+      onBlocked: (request) => this.blockedHandler?.(request),
     })
     const guard = (event: { preventDefault(): void }, url: string): void => {
-      if (!isAllowedTopLevelNavigation(url, allowedOrigins)) {
+      if (!isAllowedTopLevelNavigation(url, origins.current)) {
         event.preventDefault()
         this.log.warn('navigation.blocked', { instanceId, url })
+        this.blockedHandler?.({
+          instanceId,
+          url,
+          kind: 'navigation',
+          // Redo the refused navigation once the user has allowed its origin.
+          retry: () => {
+            if (!contents.isDestroyed() && isAllowedTopLevelNavigation(url, origins.current)) {
+              void contents.loadURL(url).catch(() => undefined)
+            }
+          },
+        })
       }
     }
     const onGone = (_event: unknown, details: { reason: string }): void => {
+      void popups.closeAll() // a popup without its opener is useless and unowned
       goneListeners.forEach((listener) => listener(details.reason))
     }
     contents.on('will-navigate', guard)
@@ -129,6 +162,8 @@ export class WindowManager implements ViewHost<Session> {
       view,
       contents,
       goneListeners,
+      origins,
+      popups,
       removeContentsListeners: () => {
         contents.off('will-navigate', guard)
         contents.off('will-redirect', guard)
@@ -152,6 +187,8 @@ export class WindowManager implements ViewHost<Session> {
     if (managed === undefined) return
     this.views.delete(instanceId)
 
+    // Popups first: they belong to this instance and must not outlive its view.
+    await managed.popups.dispose()
     managed.goneListeners.clear()
     managed.removeContentsListeners()
     if (this.window !== null && !this.window.isDestroyed()) {
@@ -165,6 +202,13 @@ export class WindowManager implements ViewHost<Session> {
     }
     this.relayout()
     this.log.info('view.destroyed', { instanceId, count: this.views.size })
+  }
+
+  updateAllowedOrigins(instanceId: string, origins: readonly string[]): void {
+    const managed = this.views.get(instanceId)
+    if (managed === undefined) return
+    managed.origins.current = origins
+    this.log.info('view.allowed_origins_updated', { instanceId, count: origins.length })
   }
 
   // ---- focus / visibility / bounds ------------------------------------

@@ -17,6 +17,11 @@ export interface Game {
   readonly name: string
   /** Validated by parseGameUrl. Restore always starts here (ADR-0003). */
   readonly startUrl: string
+  /**
+   * Extra origins (beyond startUrl's) the game may navigate to or open popups on,
+   * e.g. its OAuth provider. Patterns per origin-pattern.ts (ADR-0007).
+   */
+  readonly allowedOrigins: readonly string[]
   readonly createdAt: number
   readonly updatedAt: number
 }
@@ -58,6 +63,7 @@ export interface GameSummary {
   readonly id: string
   readonly name: string
   readonly startUrl: string
+  readonly allowedOrigins: readonly string[]
 }
 
 export interface InstanceSummary {
@@ -74,6 +80,12 @@ export interface InstanceSummary {
 export interface CreateGameInput {
   readonly name: string
   readonly startUrl: string
+  readonly allowedOrigins?: readonly string[] | undefined
+}
+
+export interface SetAllowedOriginsInput {
+  readonly gameId: string
+  readonly allowedOrigins: readonly string[]
 }
 
 export interface CreateInstanceInput {
@@ -83,4 +95,27 @@ export interface CreateInstanceInput {
 
 export interface InstanceRef {
   readonly instanceId: string
+}
+
+// ---- Blocked-request notices (ADR-0016) -------------------------------------
+
+export type NoticeKind = 'navigation' | 'popup' | 'popup-navigation'
+
+/** What the renderer is told about a blocked request: who, where to, never the full URL. */
+export interface Notice {
+  readonly id: string
+  readonly instanceId: string
+  readonly instanceLabel: string
+  readonly gameId: string
+  readonly gameName: string
+  /** Origin of the destination only, e.g. https://accounts.google.com */
+  readonly origin: string
+  readonly kind: NoticeKind
+}
+
+export type NoticeDecision = 'allow' | 'dismiss'
+
+export interface ResolveNoticeInput {
+  readonly noticeId: string
+  readonly decision: NoticeDecision
 }

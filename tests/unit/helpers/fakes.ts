@@ -102,6 +102,12 @@ export class FakeHost implements ViewHost<FakeSession> {
     }
   }
 
+  readonly originUpdates: Array<{ instanceId: string; origins: readonly string[] }> = []
+
+  updateAllowedOrigins(instanceId: string, origins: readonly string[]): void {
+    this.originUpdates.push({ instanceId, origins })
+  }
+
   unmount(instanceId: string): Promise<void> {
     this.unmounts++
     this.mountedIds.delete(instanceId)

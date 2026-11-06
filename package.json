@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:generate": "drizzle-kit generate --name init",
+    "db:generate": "drizzle-kit generate",
     "test:e2e": "electron-vite build && playwright test"
   },
   "devDependencies": {

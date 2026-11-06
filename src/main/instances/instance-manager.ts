@@ -5,6 +5,7 @@ import type {
   InstanceSummary,
 } from '@shared/domain/types'
 import { DomainError } from '../errors'
+import { allowedOriginsFor } from '../navigation/policy'
 import type { Logger } from '../logging/logger'
 import type { ManagedSession, SessionManager } from '../browser-sessions/session-manager'
 import type { InstanceRecord, Repositories } from '../persistence/repositories'
@@ -60,6 +61,7 @@ export class InstanceManager<S extends ManagedSession> {
   private readonly lastCommand = new Map<string, { kind: CommandKind; promise: Promise<unknown> }>()
   private readonly stopEpochs = new Map<string, number>()
   private readonly listeners = new Set<(summary: InstanceSummary) => void>()
+  private readonly removedListeners = new Set<(instanceId: string) => void>()
   private readonly log: Logger
   private readonly now: () => number
   private closing = false
@@ -82,6 +84,12 @@ export class InstanceManager<S extends ManagedSession> {
   onChange(listener: (summary: InstanceSummary) => void): () => void {
     this.listeners.add(listener)
     return () => this.listeners.delete(listener)
+  }
+
+  /** Fires after an instance (and its account) has been fully removed. */
+  onRemoved(listener: (instanceId: string) => void): () => void {
+    this.removedListeners.add(listener)
+    return () => this.removedListeners.delete(listener)
   }
 
   /** Live runtimes (for leak checks): empty once everything is stopped. */
@@ -173,7 +181,24 @@ export class InstanceManager<S extends ManagedSession> {
       }
       this.stopEpochs.delete(instanceId)
       this.log.info('instance.removed', { instanceId, accountId: record.account.id })
+      this.emitRemoved(instanceId)
     })
+  }
+
+  /**
+   * The game's allowed origins changed: push the new list to every live view of that
+   * game, so the user does not have to restart the instance to retry a login.
+   */
+  applyAllowedOrigins(gameId: string): void {
+    for (const record of this.deps.repos.instances.listRecords()) {
+      if (record.game.id !== gameId) continue
+      const runtime = this.runtimes.get(record.instance.id)
+      if (runtime?.view == null) continue
+      this.deps.host.updateAllowedOrigins(
+        record.instance.id,
+        allowedOriginsFor(record.game.startUrl, record.game.allowedOrigins),
+      )
+    }
   }
 
   /** Starts every instance flagged restoreOnLaunch. Failures are isolated per instance. */
@@ -245,7 +270,7 @@ export class InstanceManager<S extends ManagedSession> {
       const view = this.deps.host.mount({
         instanceId,
         session,
-        allowedOrigins: [new URL(record.game.startUrl).origin],
+        allowedOrigins: allowedOriginsFor(record.game.startUrl, record.game.allowedOrigins),
       })
       runtime.view = view
       runtime.disposables.add(view.onGone((reason) => this.handleProcessGone(runtime, generation, reason)))
@@ -372,6 +397,16 @@ export class InstanceManager<S extends ManagedSession> {
   private emitFor(instanceId: string, runtime: InstanceRuntime): void {
     const record = this.deps.repos.instances.getRecord(instanceId)
     if (record !== undefined) this.emit(this.summarize(record, runtime))
+  }
+
+  private emitRemoved(instanceId: string): void {
+    for (const listener of this.removedListeners) {
+      try {
+        listener(instanceId)
+      } catch (error) {
+        this.log.error('instance.listener_failed', { error })
+      }
+    }
   }
 
   private emit(summary: InstanceSummary): void {

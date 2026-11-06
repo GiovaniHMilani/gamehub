@@ -39,13 +39,15 @@ test('the shell exposes exactly the typed API and nothing raw', async () => {
         top: Object.keys(api).sort(),
         games: Object.keys(api['games'] ?? {}).sort(),
         instances: Object.keys(api['instances'] ?? {}).sort(),
+        notices: Object.keys(api['notices'] ?? {}).sort(),
         raw: [typeof g['ipcRenderer'], typeof g['electron'], typeof g['require'], typeof g['process']],
       }
     })
     expect(shape).toEqual({
-      top: ['games', 'instances'],
-      games: ['create', 'list'],
-      instances: ['create', 'get', 'list', 'onChanged', 'remove', 'restart', 'start', 'stop'],
+      top: ['games', 'instances', 'notices'],
+      games: ['create', 'list', 'setAllowedOrigins'],
+      instances: ['create', 'get', 'list', 'onChanged', 'remove', 'restart', 'snapshot', 'start', 'stop'],
+      notices: ['list', 'onChanged', 'resolve'],
       raw: ['undefined', 'undefined', 'undefined', 'undefined'],
     })
   } finally {
@@ -101,10 +103,11 @@ test('game pages cannot leave their origin, open windows, or obtain permissions'
     await expect.poll(async () => (await driver.logEvents()).includes('navigation.blocked')).toBe(true)
     expect(page.url()).toBe(site.url)
 
-    // window.open is denied: no window is created.
-    const opened = await page.evaluate(() => window.open('/', '_blank'))
+    // window.open to an origin outside the game's allowlist is denied: no window is created.
+    // (A popup to the game's own origin is allowed by the explicit popup policy, ADR-0007.)
+    const opened = await page.evaluate(() => window.open('https://evil.example/', '_blank'))
     expect(opened).toBeNull()
-    await expect.poll(async () => (await driver.logEvents()).includes('navigation.popup_denied')).toBe(true)
+    await expect.poll(async () => (await driver.logEvents()).includes('popup.denied')).toBe(true)
     expect(driver.app.windows().length).toBe(windowsBefore)
 
     // Permissions are denied by default.

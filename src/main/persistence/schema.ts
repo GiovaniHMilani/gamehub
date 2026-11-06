@@ -9,6 +9,8 @@ export const games = sqliteTable('games', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   startUrl: text('start_url').notNull(),
+  /** JSON array of origin patterns (see shared/domain/origin-pattern.ts). */
+  allowedOrigins: text('allowed_origins', { mode: 'json' }).$type<string[]>().notNull().default([]),
   createdAt: integer('created_at').notNull(),
   updatedAt: integer('updated_at').notNull(),
 })
