@@ -20,3 +20,5 @@ Format: Status / Context / Options / Decision / Consequences / Revisit when.
 | [0014](0014-app-protocol.md) | Shell served from `app://gamehub` | Accepted |
 | [0015](0015-event-sequencing.md) | Sequenced events and snapshots | Accepted |
 | [0016](0016-blocked-origin-notices.md) | Ask the user when an origin is blocked | Accepted |
+| [0017](0017-renderer-driven-stage.md) | The renderer says where game views go; Main applies it | Accepted |
+| [0018](0018-ui-state-and-styling.md) | UI state, components and styling | Accepted |

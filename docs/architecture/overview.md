@@ -188,7 +188,11 @@ cookies across restarts, are in
 
 ---
 
-## 9. UI over views (ADR-0009)
+## 9. UI over views (ADR-0009, ADR-0017)
+
+The renderer reports one rectangle per running instance and Main applies it after validating and
+clamping it; every view not listed is hidden (ADR-0017). State and styling of the shell: ADR-0018.
+Design notes: [`docs/development/ui-design.md`](../development/ui-design.md).
 
 WebContentsViews render above the renderer DOM. Popovers/menus live in the
 chrome region (sidebar/toolbar). Modal dialogs enable *occlusion*: Main hides

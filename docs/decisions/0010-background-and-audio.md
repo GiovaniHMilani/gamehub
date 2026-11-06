@@ -21,3 +21,11 @@ Four accounts playing audio at once is noisy. The user wants both as options.
 - In the 2×2 grid all views are visible; background mode mainly matters when
   one account is expanded or the window is minimized/occluded.
 - Exact visibility semantics under `active` must be measured (Phase 9).
+
+## Measured in Phase 7
+Hiding a view with `view.setVisible(false)` does not make Chromium treat the page as
+backgrounded: `visibilityState` stays `visible`, timers keep their normal rate and
+`requestAnimationFrame` keeps firing at the same rate as for a visible view. The
+"economy" mode described above is therefore not in effect today; neither
+`backgroundMode` nor `setBackgroundThrottling` is implemented. See ADR-0017.
+

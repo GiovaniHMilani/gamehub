@@ -13,11 +13,15 @@ Each phase ends with typecheck + phase tests + a report of what was verified.
 - OAuth/app:///seq phase — done: popup policy and controller (same-session,
   allowlist, limits, cleanup), shell served from `app://gamehub`, sequenced
   events with snapshot, removal event.
-- Allowed origins: granted from a blocked-request notice in one click (ADR-0016), live.
-  The manual field was removed; `games.setAllowedOrigins` stays for a future settings UI.
-- Not done yet: a real settings UI to review/revoke them, opening denied
-  links in the system browser, `app_state` / crash-loop guard, renderer-driven
-  layout (MainWindow/LayoutController split), real UI, measurement, packaging.
+- Allowed origins: granted from a blocked-request notice in one click (ADR-0016), live, and
+  reviewed or revoked per game from the UI ("Allowed sites").
+- Phase 7 (UI) — done: sidebar, Library (games with their accounts as lines), Play screen whose
+  viewport is requested by the renderer and applied by Main (ADR-0017), dialogs, loading / empty /
+  error states, notices and toasts. State is a Zustand read-model over the existing sequenced
+  events; styling is plain CSS tokens (ADR-0018).
+- Not done yet: an economy mode for hidden accounts (they currently cost as much as visible ones,
+  ADR-0010 / ADR-0017), events for games, opening denied links in the
+  system browser, `app_state` / crash-loop guard, packaging, Windows verification.
 
 | Phase | Deliverable | Exit criteria |
 |---|---|---|
