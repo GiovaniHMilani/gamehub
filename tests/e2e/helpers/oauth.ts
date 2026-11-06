@@ -1,6 +1,6 @@
 import { expect, type ElectronApplication, type Page } from '@playwright/test'
 import type { OAuthTestSite } from '../../fixtures/oauth-test-site/server'
-import type { Driver } from './driver'
+import { waitReady, type Driver } from './driver'
 
 interface GamePageApi {
   startLogin(url: string): boolean
@@ -21,7 +21,7 @@ export async function openOAuthPopup(driver: Driver, site: OAuthTestSite, gamePa
     })
     .toBe(true)
   const page = popup as Page
-  await page.waitForSelector('body[data-ready="true"]')
+  await waitReady(page)
   return page
 }
 

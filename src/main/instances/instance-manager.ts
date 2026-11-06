@@ -137,6 +137,18 @@ export class InstanceManager<S extends ManagedSession> {
     })
   }
 
+  /**
+   * Gives keyboard focus to a running instance's view. Where the view is shown is the
+   * renderer's request (stage layout); this only moves focus.
+   */
+  focus(instanceId: string): InstanceSummary {
+    const record = this.requireRecord(instanceId)
+    const runtime = this.runtimes.get(instanceId)
+    if (runtime?.status !== 'running') throw new DomainError('INVALID_STATE', 'Instance is not running')
+    this.deps.host.focusView(instanceId)
+    return this.summarize(record, runtime)
+  }
+
   /** "Close instance": stops the view, keeps the account and its session data. */
   stop(instanceId: string): Promise<InstanceSummary> {
     this.assertOpen()
@@ -199,6 +211,35 @@ export class InstanceManager<S extends ManagedSession> {
         allowedOriginsFor(record.game.startUrl, record.game.allowedOrigins),
       )
     }
+  }
+
+  /**
+   * Removes a game and every account of it. Each account goes through `remove` (stop the view, delete
+   * its rows with a tombstone, wipe its session), one at a time: there is exactly one way to delete
+   * browser data. If one account fails the error propagates and the game keeps the accounts that
+   * were not removed yet, so nothing is left half-deleted without a way to finish.
+   */
+  async removeGame(gameId: string): Promise<void> {
+    this.assertOpen()
+    if (this.deps.repos.games.get(gameId) === undefined) throw new DomainError('NOT_FOUND', 'Game not found')
+
+    const accounts = this.deps.repos.instances.listRecords().filter((record) => record.game.id === gameId)
+    for (const record of accounts) {
+      try {
+        await this.remove(record.instance.id)
+      } catch (error) {
+        if (error instanceof DomainError && error.code === 'NOT_FOUND') continue // already gone: what we wanted
+        throw error
+      }
+    }
+
+    try {
+      this.deps.repos.games.remove(gameId)
+    } catch {
+      // An account appeared meanwhile (the FK is RESTRICT): refuse rather than orphan it.
+      throw new DomainError('INVALID_STATE', 'The game still has accounts')
+    }
+    this.log.info('game.removed', { gameId, accounts: accounts.length })
   }
 
   /** Starts every instance flagged restoreOnLaunch. Failures are isolated per instance. */

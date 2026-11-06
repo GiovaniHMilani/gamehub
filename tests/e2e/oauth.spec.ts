@@ -3,7 +3,7 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { expect, test } from '@playwright/test'
 import { startOAuthTestSite, type OAuthTestSite } from '../fixtures/oauth-test-site/server'
-import { Driver, sessionInfos, snapshot } from './helpers/driver'
+import { Driver, sessionInfos, snapshot, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
 import {
   closeProviderPopups,
@@ -132,7 +132,7 @@ test('a login made through the popup survives restarting GameHub, per account', 
       expect(pages).toHaveLength(2)
       const pairs: string[] = []
       for (const page of pages) {
-        await page.waitForSelector('body[data-ready="true"]')
+        await waitReady(page)
         const snap = await snapshot(page)
         const popup = await openOAuthPopup(second, site, page)
         const provider = await providerState(popup)
@@ -210,7 +210,7 @@ test('popup policy: only allowed origins open; everything else is denied and cre
     expect(await tryOpen(pageA, site.authorizeUrl(), attackFeatures)).toBe(true) // the origin is allowed, the extras are not honoured
     let attacked: (typeof popup) | undefined
     await expect.poll(() => (attacked = driver.app.windows().find((p) => p.url().startsWith(site.providerUrl))) !== undefined).toBe(true)
-    await attacked?.waitForSelector('body[data-ready="true"]')
+    if (attacked !== undefined) await waitReady(attacked)
     const attackReport = await popupSessionReport(driver.app, site)
     const markerA = (await snapshot(pageA)).marker
     expect(attackReport?.views.find((v) => v.marker === markerA)?.sameSessionAsPopup).toBe(true)
@@ -290,7 +290,7 @@ test('popup cleanup: stopping the instance, or quitting the app, closes its popu
     // After a restart the instance gets a fresh controller: popups work again.
     await driver.start(a.id)
     const page2 = driver.gamePages(site.gameUrl)[0]
-    await page2?.waitForSelector('body[data-ready="true"]')
+    if (page2 !== undefined) await waitReady(page2)
     const third = await openOAuthPopup(driver, site, page2 as typeof page)
     expect(third.url().startsWith(site.providerUrl)).toBe(true)
 
@@ -344,74 +344,5 @@ test('a top-level redirect to a provider is blocked until its origin is allowed,
   } finally {
     await driver.close()
     await removeUserData(driver.userDataDir)
-  }
-})
-
-test('the strip recognises an existing game even if its URL is typed differently, and says when there is none', async () => {
-  const driver = await Driver.launch()
-  try {
-    const { shell } = driver
-    const fill = async (label: string, value: string): Promise<void> => shell.getByLabel(label).fill(value)
-
-    await fill('Game URL', site.gameUrl) // with the trailing slash, as stored
-    await fill('Account label', 'A')
-    await shell.getByRole('button', { name: 'Add account' }).click()
-    await expect(shell.getByTestId('instance-A')).toBeVisible()
-    await expect(shell.getByTestId('game-status')).toContainText('allowed origins (none yet')
-
-    await fill('Game URL', site.gameUrl.replace(/\/$/, '')) // same page, no trailing slash
-    await expect(shell.getByTestId('game-status')).toContainText('allowed origins (none yet') // still the same game
-
-    await fill('Game URL', 'https://other.example/')
-    await expect(shell.getByTestId('game-status')).toContainText('No game with this URL yet')
-  } finally {
-    await driver.close()
-    await removeUserData(driver.userDataDir)
-  }
-})
-
-test('there is no manual origins field: origins are granted from the notice', async () => {
-  const driver = await Driver.launch()
-  try {
-    const { shell } = driver
-    await expect(shell.getByLabel('Allowed origins')).toHaveCount(0)
-    await expect(shell.getByPlaceholder(/origins/i)).toHaveCount(0)
-    await expect(shell.getByRole('button', { name: 'Save origins' })).toHaveCount(0)
-    await expect(shell.getByRole('button', { name: 'Add account' })).toHaveCount(1)
-  } finally {
-    await driver.close()
-    await removeUserData(driver.userDataDir)
-  }
-})
-
-test('with a game already in the library, the strip pre-selects it, so the URL is not retyped', async () => {
-  const userData = await mkdtemp(join(tmpdir(), 'gamehub-preselect-'))
-  try {
-    // An existing library: one game with accounts, as in a real profile.
-    const first = await Driver.launch(userData)
-    const game = await first.createGame('Existing Game', site.gameUrl)
-    for (const label of ['teste', 'teste 2', 'teste 3', 'teste 4']) await first.createInstance(game.id, label)
-    await first.close()
-
-    const second = await Driver.launch(userData)
-    try {
-      const { shell } = second
-      // Nothing typed: the game is selected and its URL is already there.
-      await expect(shell.getByLabel('Game URL')).toHaveValue(site.gameUrl)
-      await expect(shell.getByLabel('Game', { exact: true })).toHaveValue(game.id)
-      await expect(shell.getByTestId('game-status')).toContainText('Existing Game: allowed origins (none yet')
-      await expect(shell.getByLabel('Account label')).toBeVisible() // adding an account is just a label away
-
-      // The strip is exactly as tall as the area Main reserves, so game views never cover it,
-      // and every control stays reachable even with four accounts.
-      const strip = await shell.getByTestId('app-root').boundingBox()
-      expect(strip?.height).toBe(96)
-      await shell.getByTestId('instance-teste 4').getByRole('button', { name: 'Remove' }).scrollIntoViewIfNeeded()
-      await expect(shell.getByTestId('instance-teste 4').getByRole('button', { name: 'Remove' })).toBeVisible()
-    } finally {
-      await second.close()
-    }
-  } finally {
-    await removeUserData(userData)
   }
 })

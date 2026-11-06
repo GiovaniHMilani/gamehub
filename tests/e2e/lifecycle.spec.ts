@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { startSessionTestSite, type SessionTestSite } from '../fixtures/session-test-site/server'
-import { Driver } from './helpers/driver'
+import { Driver, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
 
 let site: SessionTestSite
@@ -136,7 +136,7 @@ test('a crashed renderer becomes crashed, and restart recovers it without duplic
     // Same account, same session: the data written before the crash is still there.
     const reopened = driver.gamePages(site.url)
     expect(reopened).toHaveLength(1)
-    await reopened[0]?.waitForSelector('body[data-ready="true"]')
+    if (reopened[0] !== undefined) await waitReady(reopened[0])
     expect(await reopened[0]?.evaluate(() => localStorage.getItem('probe'))).toBe('kept')
   } finally {
     await driver.close()

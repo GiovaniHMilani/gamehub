@@ -5,5 +5,5 @@
     "lib": ["ES2023", "DOM"],
     "types": ["node"]
   },
-  "include": ["tests/**/*", "src/shared/**/*", "src/main/**/*"]
+  "include": ["tests/**/*", "src/shared/**/*", "src/main/**/*", "src/renderer/model/**/*", "src/renderer/stores/**/*"]
 }

@@ -65,7 +65,7 @@ async function main(): Promise<void> {
   windows.blockedHandler = (request) => notices.request(request)
   const shell = windows.createMainWindow()
   const devServerUrl = app.isPackaged ? undefined : process.env['ELECTRON_RENDERER_URL']
-  registerIpc({ getShellWindow: () => windows.mainWindow, manager, publisher, notices, repos, log: log.child('ipc'), devServerUrl })
+  registerIpc({ getShellWindow: () => windows.mainWindow, manager, publisher, notices, stage: windows, repos, log: log.child('ipc'), devServerUrl })
 
   // Main owns `seq`: every state change and removal is sequenced here, then pushed to the shell.
   manager.onChange((instance) => {

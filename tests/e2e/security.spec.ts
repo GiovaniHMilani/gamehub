@@ -40,14 +40,16 @@ test('the shell exposes exactly the typed API and nothing raw', async () => {
         games: Object.keys(api['games'] ?? {}).sort(),
         instances: Object.keys(api['instances'] ?? {}).sort(),
         notices: Object.keys(api['notices'] ?? {}).sort(),
+        stage: Object.keys(api['stage'] ?? {}).sort(),
         raw: [typeof g['ipcRenderer'], typeof g['electron'], typeof g['require'], typeof g['process']],
       }
     })
     expect(shape).toEqual({
-      top: ['games', 'instances', 'notices'],
-      games: ['create', 'list', 'setAllowedOrigins'],
-      instances: ['create', 'get', 'list', 'onChanged', 'remove', 'restart', 'snapshot', 'start', 'stop'],
+      top: ['games', 'instances', 'notices', 'stage'],
+      games: ['create', 'list', 'remove', 'setAllowedOrigins', 'update'],
+      instances: ['create', 'focus', 'get', 'list', 'onChanged', 'remove', 'restart', 'snapshot', 'start', 'stop'],
       notices: ['list', 'onChanged', 'resolve'],
+      stage: ['setLayout'],
       raw: ['undefined', 'undefined', 'undefined', 'undefined'],
     })
   } finally {

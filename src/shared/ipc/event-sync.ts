@@ -56,6 +56,11 @@ export interface SyncDeps {
   snapshot(): Promise<Result<InstancesSnapshot>>
   subscribe(listener: (event: InstanceEvent) => void): () => void
   onChange(view: SyncView): void
+  /**
+   * Called when a snapshot could not be obtained (an error Result, or a rejected call).
+   * The previous state, if any, is kept. `retry()` or the next gap tries again.
+   */
+  onError?(): void
 }
 
 const MAX_RESYNC_ATTEMPTS = 3
@@ -78,6 +83,11 @@ export class InstanceSyncEngine {
   start(): void {
     this.stopped = false
     this.unsubscribe = this.deps.subscribe((event) => this.receive(event))
+    void this.sync()
+  }
+
+  /** Takes a new snapshot now (the "Try again" of an error screen). */
+  retry(): void {
     void this.sync()
   }
 
@@ -110,9 +120,18 @@ export class InstanceSyncEngine {
     try {
       for (let attempt = 0; attempt < MAX_RESYNC_ATTEMPTS && !this.stopped; attempt++) {
         this.buffer = []
-        const result = await this.deps.snapshot()
+        let result: Awaited<ReturnType<SyncDeps['snapshot']>>
+        try {
+          result = await this.deps.snapshot()
+        } catch {
+          // A rejected IPC call (e.g. no handler) is a failed snapshot, not an unhandled rejection.
+          result = { ok: false, error: { code: 'INTERNAL', message: 'Snapshot failed' } }
+        }
         if (this.stopped) return
-        if (!result.ok) return // keep what we have; the next gap or start retries
+        if (!result.ok) {
+          this.deps.onError?.()
+          return // keep what we have; retry() or the next gap tries again
+        }
 
         let state = fromSnapshot(result.data)
         let gap = false

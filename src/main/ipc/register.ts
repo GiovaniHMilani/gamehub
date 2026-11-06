@@ -1,10 +1,11 @@
 import { ipcMain, type BrowserWindow, type IpcMainInvokeEvent } from 'electron'
+import type { StageSlot } from '@shared/domain/stage-layout'
 import type { z } from 'zod'
 import type { Game, GameSummary, InstanceSummary } from '@shared/domain/types'
 import { IPC } from '@shared/ipc/channels'
 import type { InstancesSnapshot } from '@shared/ipc/instance-events'
 import type { ErrorCode, Result } from '@shared/ipc/result'
-import { createGameSchema, createInstanceSchema, instanceRefSchema, resolveNoticeSchema, setAllowedOriginsSchema } from '@shared/ipc/schemas'
+import { createGameSchema, createInstanceSchema, gameRefSchema, instanceRefSchema, resolveNoticeSchema, setAllowedOriginsSchema, stageLayoutSchema, updateGameSchema } from '@shared/ipc/schemas'
 import { DomainError } from '../errors'
 import type { InstanceManager } from '../instances/instance-manager'
 import type { Logger } from '../logging/logger'
@@ -19,6 +20,8 @@ export interface IpcDeps<S extends ManagedSession> {
   manager: InstanceManager<S>
   publisher: InstanceEventPublisher
   notices: NoticeBroker
+  /** Where views are shown: the renderer asks, Main applies (ADR-0017). */
+  stage: { applyLayout(slots: readonly StageSlot[]): void }
   repos: Repositories
   log: Logger
   /** Vite dev server URL; only set when running unpackaged with HMR. */
@@ -30,6 +33,8 @@ const toGameSummary = (game: Game): GameSummary => ({
   id: game.id,
   name: game.name,
   startUrl: game.startUrl,
+  description: game.description,
+  createdAt: game.createdAt,
   allowedOrigins: game.allowedOrigins,
 })
 
@@ -41,11 +46,11 @@ const toGameSummary = (game: Game): GameSummary => ({
  * channel constant, a schema and a line here.
  */
 export function registerIpc<S extends ManagedSession>(deps: IpcDeps<S>): () => void {
-  const { manager, publisher, notices, repos, log } = deps
+  const { manager, publisher, notices, stage, repos, log } = deps
   const now = deps.now ?? Date.now
 
   /** Only the shell's main frame may call us; game views have no bridge at all. */
-  const isShellSender = (event: IpcMainInvokeEvent): boolean => {
+  const isShellSender = (event: Pick<IpcMainInvokeEvent, 'senderFrame'>): boolean => {
     const shell = deps.getShellWindow()
     if (shell === null || shell.isDestroyed()) return false
     const frame = event.senderFrame
@@ -102,10 +107,33 @@ export function registerIpc<S extends ManagedSession>(deps: IpcDeps<S>): () => v
     notices.reconcile(game.id)
     return toGameSummary(game)
   })
+  handle(IPC.gamesUpdate, updateGameSchema, (input) => {
+    const before = repos.games.get(input.gameId)
+    if (before === undefined) throw new DomainError('NOT_FOUND', 'Game not found')
+    const game = repos.games.update(input.gameId, { name: input.name, startUrl: input.startUrl, description: input.description }, now())
+    if (game === undefined) throw new DomainError('NOT_FOUND', 'Game not found')
+    const originChanged = new URL(before.startUrl).origin !== new URL(game.startUrl).origin
+    log.info('game.updated', { gameId: game.id, originChanged })
+    // Pending notices may now be about the game's own origin. Views keep the origins they were mounted with
+    // until they are restarted: a running account stays on the page it is on.
+    notices.reconcile(game.id)
+    return toGameSummary(game)
+  })
+  handle(IPC.gamesRemove, gameRefSchema, async (input) => {
+    await manager.removeGame(input.gameId)
+    notices.clearForGame(input.gameId)
+    return null
+  })
   handle(IPC.gamesCreate, createGameSchema, (input) =>
     toGameSummary(
       repos.games.create(
-        { id: crypto.randomUUID(), name: input.name, startUrl: input.startUrl, allowedOrigins: input.allowedOrigins ?? [] },
+        {
+          id: crypto.randomUUID(),
+          name: input.name,
+          startUrl: input.startUrl,
+          description: input.description ?? '',
+          allowedOrigins: input.allowedOrigins ?? [],
+        },
         now(),
       ),
     ),
@@ -118,12 +146,26 @@ export function registerIpc<S extends ManagedSession>(deps: IpcDeps<S>): () => v
   handle(IPC.instancesStart, instanceRefSchema, (input) => manager.start(input.instanceId))
   handle(IPC.instancesStop, instanceRefSchema, (input) => manager.stop(input.instanceId))
   handle(IPC.instancesRestart, instanceRefSchema, (input) => manager.restart(input.instanceId))
+  handle(IPC.instancesFocus, instanceRefSchema, (input) => manager.focus(input.instanceId))
   handle(IPC.instancesRemove, instanceRefSchema, async (input) => {
     await manager.remove(input.instanceId)
     return null
   })
 
+  // One-way: invoked at frame rate while resizing, so no Result and no per-call logging.
+  // A rejected layout is ignored (and logged once per kind of failure), never answered.
+  ipcMain.on(IPC.stageSetLayout, (event, raw: unknown) => {
+    if (!isShellSender(event)) return
+    const parsed = stageLayoutSchema.safeParse(raw)
+    if (!parsed.success) {
+      log.warn('ipc.invalid_argument', { channel: IPC.stageSetLayout, fields: parsed.error.issues.map((i) => i.path.join('.')) })
+      return
+    }
+    stage.applyLayout(parsed.data.slots)
+  })
+
   return () => {
     for (const channel of Object.values(IPC)) ipcMain.removeHandler(channel)
+    ipcMain.removeAllListeners(IPC.stageSetLayout)
   }
 }

@@ -15,6 +15,13 @@
       "when": 1793965654523,
       "tag": "0001_games_allowed_origins",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793970133125,
+      "tag": "0002_games_description",
+      "breakpoints": true
     }
   ]
 }

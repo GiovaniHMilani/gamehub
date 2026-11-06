@@ -42,7 +42,7 @@ test('shell renderer has no Node.js access', async () => {
       process: typeof (globalThis as Record<string, unknown>)['process'],
       gamehubKeys: Object.keys((globalThis as unknown as { gamehub: object }).gamehub),
     }))
-    expect(exposure).toEqual({ require: 'undefined', process: 'undefined', gamehubKeys: ['games', 'instances', 'notices'] })
+    expect(exposure).toEqual({ require: 'undefined', process: 'undefined', gamehubKeys: ['games', 'instances', 'notices', 'stage'] })
   } finally {
     await app.close()
     await removeUserData(userDataDir)

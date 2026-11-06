@@ -225,6 +225,21 @@ describe('NoticeBroker: housekeeping', () => {
     expect(secondRetried).toBe(true)
   })
 
+  it('clearForGame forgets a removed game: its notices and its "do not ask again" memory', () => {
+    const other = h.repos.games.create({ id: crypto.randomUUID(), name: 'Other', startUrl: 'https://other.example/' }, 1)
+    const otherInstance = h.manager.createInstance({ gameId: other.id, label: 'o' }).id
+    request(GOOGLE)
+    request('https://discord.com')
+    request(GOOGLE, { id: otherInstance })
+    broker.resolve(broker.list()[1]?.id as string, 'dismiss') // discord, dismissed for the first game
+
+    broker.clearForGame(h.gameId)
+    expect(broker.list().map((n) => n.gameName)).toEqual(['Other'])
+    expect(published.at(-1)?.map((n) => n.gameName)).toEqual(['Other'])
+    request('https://discord.com') // the quiet period went with the game
+    expect(broker.list().map((n) => n.origin)).toContain('https://discord.com')
+  })
+
   it('reconcile drops notices that a manual edit already satisfied', () => {
     request(GOOGLE)
     request('https://discord.com')

@@ -16,6 +16,8 @@ const api: GameHubApi = {
     create: (input) => call(IPC.gamesCreate, input),
     list: () => call(IPC.gamesList),
     setAllowedOrigins: (input) => call(IPC.gamesSetAllowedOrigins, input),
+    remove: (gameId) => call(IPC.gamesRemove, { gameId }),
+    update: (input) => call(IPC.gamesUpdate, input),
   },
   instances: {
     list: () => call(IPC.instancesList),
@@ -25,6 +27,7 @@ const api: GameHubApi = {
     start: (instanceId) => call(IPC.instancesStart, { instanceId }),
     stop: (instanceId) => call(IPC.instancesStop, { instanceId }),
     restart: (instanceId) => call(IPC.instancesRestart, { instanceId }),
+    focus: (instanceId) => call(IPC.instancesFocus, { instanceId }),
     remove: (instanceId) => call(IPC.instancesRemove, { instanceId }),
     onChanged: (listener) => {
       // The wrapper hides the raw IpcRendererEvent; the same reference is removed on unsubscribe.
@@ -45,6 +48,10 @@ const api: GameHubApi = {
         ipcRenderer.removeListener(EVENTS.noticesChanged, wrapper)
       }
     },
+  },
+  stage: {
+    // One-way: no result to wait for, and nothing for the page to learn from a rejected layout.
+    setLayout: (slots) => ipcRenderer.send(IPC.stageSetLayout, { slots }),
   },
 }
 

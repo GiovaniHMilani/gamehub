@@ -270,6 +270,101 @@ describe('remove', () => {
   })
 })
 
+describe('remove game', () => {
+  const accountsOf = (gameId: string) => h.repos.instances.listRecords().filter((r) => r.game.id === gameId)
+
+  it('removes the game and every account: stops views, wipes sessions, leaves tombstones', async () => {
+    const a = create('A')
+    const b = create('B')
+    create('C')
+    await h.manager.start(a.id)
+    await h.manager.start(b.id)
+    const removedEvents: string[] = []
+    h.manager.onRemoved((id) => removedEvents.push(id))
+    const sessions = [...h.fakeSessions.values()]
+
+    await h.manager.removeGame(h.gameId)
+
+    expect(h.repos.games.get(h.gameId)).toBeUndefined()
+    expect(accountsOf(h.gameId)).toHaveLength(0)
+    expect(h.host.mountedIds.size).toBe(0) // running views were closed
+    expect(h.manager.liveRuntimeCount).toBe(0)
+    expect(h.repos.tombstones.list()).toHaveLength(3) // each partition is deleted at the next boot
+    expect(sessions.every((session) => session.cleared === 1)).toBe(true)
+    expect(removedEvents).toHaveLength(3) // the UI learns about every account through events
+    expect(h.sink.events()).toContain('game.removed')
+  })
+
+  it('leaves other games, and their running accounts and sessions, untouched', async () => {
+    const other = h.repos.games.create({ id: crypto.randomUUID(), name: 'Other', startUrl: 'https://other.example/' }, Date.now())
+    const keep = h.manager.createInstance({ gameId: other.id, label: 'keep' })
+    create('doomed')
+    await h.manager.start(keep.id)
+    const keptSession = h.host.sessionsByInstance.get(keep.id)
+
+    await h.manager.removeGame(h.gameId)
+
+    expect(h.repos.games.get(other.id)).toBeDefined()
+    expect(h.manager.get(keep.id).status).toBe('running')
+    expect(keptSession?.cleared).toBe(0)
+    expect(h.repos.tombstones.list()).toHaveLength(1)
+  })
+
+  it('removes a game that has no accounts', async () => {
+    await h.manager.removeGame(h.gameId)
+    expect(h.repos.games.get(h.gameId)).toBeUndefined()
+    expect(h.repos.tombstones.list()).toEqual([])
+  })
+
+  it('an unknown game is NOT_FOUND, and removing twice fails the second time', async () => {
+    await expect(h.manager.removeGame(crypto.randomUUID())).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    await h.manager.removeGame(h.gameId)
+    await expect(h.manager.removeGame(h.gameId)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('refuses instead of orphaning an account that appears while the game is being removed', async () => {
+    create('A')
+    let sneaked: string | null = null
+    h.manager.onRemoved(() => {
+      if (sneaked === null) sneaked = h.manager.createInstance({ gameId: h.gameId, label: 'late' }).id // a new account races in
+    })
+    await expect(h.manager.removeGame(h.gameId)).rejects.toMatchObject({ code: 'INVALID_STATE' })
+    expect(h.repos.games.get(h.gameId)).toBeDefined() // the game stays, with the account that raced in
+    expect(accountsOf(h.gameId).map((r) => r.account.label)).toEqual(['late'])
+  })
+
+  it('the repository itself refuses to delete a game that still has accounts (RESTRICT)', () => {
+    create('A')
+    expect(() => h.repos.games.remove(h.gameId)).toThrow()
+    expect(h.repos.games.get(h.gameId)).toBeDefined()
+    expect(accountsOf(h.gameId)).toHaveLength(1)
+  })
+
+  it('is refused once the app is shutting down', async () => {
+    await h.manager.shutdown()
+    await expect(h.manager.removeGame(h.gameId)).rejects.toMatchObject({ code: 'INVALID_STATE' })
+  })
+})
+
+describe('focus', () => {
+  it('focuses a running instance and reports it', async () => {
+    const a = create('A')
+    await h.manager.start(a.id)
+    const summary = h.manager.focus(a.id)
+    expect(summary).toMatchObject({ id: a.id, status: 'running' })
+    expect(h.host.focused).toEqual([a.id])
+  })
+  it('refuses anything that is not running, and unknown instances', async () => {
+    const a = create('A')
+    expect(() => h.manager.focus(a.id)).toThrow(/not running/)
+    h.host.loadMode = { fail: 'ERR_CONNECTION_REFUSED' }
+    await h.manager.start(a.id)
+    expect(() => h.manager.focus(a.id)).toThrow(DomainError) // error state
+    expect(() => h.manager.focus(crypto.randomUUID())).toThrow(/not found/i)
+    expect(h.host.focused).toEqual([])
+  })
+})
+
 describe('allowed origins', () => {
   it('pushes the new list to live views of that game only', async () => {
     const other = h.repos.games.create({ id: crypto.randomUUID(), name: 'Other', startUrl: 'https://other.example/' }, Date.now())

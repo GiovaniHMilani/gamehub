@@ -152,6 +152,19 @@ export class NoticeBroker {
     if (changed) this.publish()
   }
 
+  /** The game was removed: nothing about it can be allowed or retried any more. */
+  clearForGame(gameId: string): void {
+    let changed = false
+    for (const [id, entry] of this.pending) {
+      if (entry.notice.gameId === gameId) {
+        this.pending.delete(id)
+        changed = true
+      }
+    }
+    for (const key of this.dismissedAt.keys()) if (key.startsWith(`${gameId}|`)) this.dismissedAt.delete(key)
+    if (changed) this.publish()
+  }
+
   /** The instance stopped, crashed or was removed: its refused navigations cannot be redone any more. */
   clearForInstance(instanceId: string): void {
     let changed = false

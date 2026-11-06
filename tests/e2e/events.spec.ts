@@ -76,7 +76,7 @@ test('the real renderer detects a lost event, ignores duplicates and recovers by
     await driver.createInstance(game.id, 'A')
     const status = driver.shell.getByTestId('sync-status')
     await expect(driver.shell.getByTestId('instance-A')).toBeVisible()
-    await expect(status).toContainText('resyncs 0')
+    await expect(status).toHaveAttribute('data-resyncs', '0')
 
     const current = async (): Promise<number> => {
       const snap = await driver.shell.evaluate(() => window.gamehub.instances.snapshot())
@@ -95,19 +95,19 @@ test('the real renderer detects a lost event, ignores duplicates and recovers by
     // Duplicate/old seq: ignored. Nothing changes, no resync.
     await forge({ seq: 1, type: 'instance.changed', instance: bogus })
     await expect(driver.shell.getByTestId('instance-Forged')).toHaveCount(0)
-    await expect(status).toContainText('resyncs 0')
+    await expect(status).toHaveAttribute('data-resyncs', '0')
 
     // A hole in the sequence: the event is NOT applied, the renderer resyncs from Main.
     await forge({ seq: seq + 50, type: 'instance.changed', instance: bogus })
-    await expect(status).toContainText('resyncs 1')
-    await expect(status).toContainText(`seq ${seq}`)
+    await expect(status).toHaveAttribute('data-resyncs', '1')
+    await expect(status).toHaveAttribute('data-seq', String(seq))
     await expect(driver.shell.getByTestId('instance-Forged')).toHaveCount(0)
     await expect(driver.shell.getByTestId('instance-A')).toBeVisible()
 
     // And live updates keep working after the resync.
     await driver.start((await driver.list())[0]?.id as string)
-    await expect(driver.shell.getByTestId('instance-A').locator('[data-status]')).toHaveText('running')
-    await expect(status).toContainText('resyncs 1')
+    await expect(driver.shell.getByTestId('instance-A').locator('[data-status]')).toHaveAttribute('data-status', 'running')
+    await expect(status).toHaveAttribute('data-resyncs', '1')
   } finally {
     await driver.close()
     await site.close()

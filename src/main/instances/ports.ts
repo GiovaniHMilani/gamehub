@@ -45,6 +45,8 @@ export interface ViewHost<S> {
   mount(args: { instanceId: string; session: S; allowedOrigins: readonly string[] }): MountedView
   /** Detaches the view, closes its webContents and resolves once destroyed. */
   unmount(instanceId: string): Promise<void>
+  /** Gives keyboard focus to a mounted view. No-op if it is not mounted. */
+  focusView(instanceId: string): void
   /** Replaces the origins a mounted view (and its popups) may navigate to. No-op if not mounted. */
   updateAllowedOrigins(instanceId: string, origins: readonly string[]): void
 }

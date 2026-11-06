@@ -1,0 +1,58 @@
+/*
+ * Design tokens. One idea carries the identity: every game owns a hue (--hue, set per game),
+ * and every account is a line with a state lamp. Everything else stays quiet.
+ */
+:root {
+  color-scheme: light;
+
+  /* ink: the sidebar and all text; blue-tinted slate, never a flat black */
+  --ink-900: #1b2430;
+  --ink-800: #232f3f;
+  --ink-700: #2e3c50;
+  --ink-600: #44536a;
+  --ink-500: #5b6b80;
+  --ink-300: #a3afc0;
+  --ink-100: #e4e9f1;
+
+  /* paper: the working canvas */
+  --paper: #eef1f5;
+  --surface: #ffffff;
+  --line: #d3dae3;
+  --line-strong: #b4bfce;
+
+  /* the single action colour */
+  --signal: #0e7c86;
+  --signal-strong: #0a626a;
+  --signal-wash: #e0f1f2;
+
+  /* state lamps: also told apart by shape, never by colour alone */
+  --lamp-run: #1d9a59;
+  --lamp-busy: #c4860a;
+  --lamp-bad: #c13b2c;
+  --lamp-off: #8593a6;
+
+  --danger: #b3291b;
+  --danger-wash: #fbe9e6;
+  --notice-wash: #fff3c4;
+  --notice-line: #d6b100;
+
+  /* a game's colour: set per game by useGameStyle (never derived here, see the note there). These are the neutral fallback. */
+  --game: hsl(210 20% 45%);
+  --game-wash: hsl(210 30% 94%);
+
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI Variable Text', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 15px;
+  --text-lg: 20px;
+
+  --radius-control: 6px;
+  --radius-dialog: 10px;
+  --sidebar-width: 232px;
+  --topbar-height: 52px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+}

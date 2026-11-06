@@ -17,6 +17,8 @@ export interface Game {
   readonly name: string
   /** Validated by parseGameUrl. Restore always starts here (ADR-0003). */
   readonly startUrl: string
+  /** One short line shown in the catalog. May be empty. */
+  readonly description: string
   /**
    * Extra origins (beyond startUrl's) the game may navigate to or open popups on,
    * e.g. its OAuth provider. Patterns per origin-pattern.ts (ADR-0007).
@@ -63,6 +65,9 @@ export interface GameSummary {
   readonly id: string
   readonly name: string
   readonly startUrl: string
+  readonly description: string
+  /** Creation time (ms). The UI uses it to give each game a stable, distinct colour. */
+  readonly createdAt: number
   readonly allowedOrigins: readonly string[]
 }
 
@@ -80,6 +85,7 @@ export interface InstanceSummary {
 export interface CreateGameInput {
   readonly name: string
   readonly startUrl: string
+  readonly description?: string | undefined
   readonly allowedOrigins?: readonly string[] | undefined
 }
 
@@ -91,6 +97,17 @@ export interface SetAllowedOriginsInput {
 export interface CreateInstanceInput {
   readonly gameId: string
   readonly label: string
+}
+
+export interface UpdateGameInput {
+  readonly gameId: string
+  readonly name: string
+  readonly startUrl: string
+  readonly description: string
+}
+
+export interface GameRef {
+  readonly gameId: string
 }
 
 export interface InstanceRef {

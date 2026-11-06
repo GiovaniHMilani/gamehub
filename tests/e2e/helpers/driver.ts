@@ -15,6 +15,17 @@ export interface Snap {
   indexedDB: string | null
 }
 
+/**
+ * Waits until a fixture page has finished rendering.
+ *
+ * Do NOT use `page.waitForSelector` on a game page: it polls with requestAnimationFrame, and a
+ * view the shell has not placed on screen is hidden, so it paints no frames and the wait starves.
+ * Interval polling does not depend on painting.
+ */
+export function waitReady(page: Page): Promise<unknown> {
+  return page.waitForFunction(() => document.body?.dataset['ready'] === 'true', undefined, { polling: 50 })
+}
+
 export function unwrap<T>(result: Result<T>): T {
   if (!result.ok) throw new Error(`IPC failed: ${result.error.code}: ${result.error.message}`)
   return result.data
@@ -88,7 +99,7 @@ export class Driver {
       })
       .toBe(true)
     const page = found as Page
-    await page.waitForSelector('body[data-ready="true"]')
+    await waitReady(page)
     return page
   }
 

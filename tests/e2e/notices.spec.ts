@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test, type Page } from '@playwright/test'
 import { startOAuthTestSite, type OAuthTestSite } from '../fixtures/oauth-test-site/server'
-import { Driver } from './helpers/driver'
+import { Driver, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
 import { tryOpen } from './helpers/oauth'
 
@@ -64,9 +64,12 @@ test('blocked redirect -> notice -> Allow -> the navigation is redone, for every
     const again = await Driver.launch(userData)
     try {
       await again.waitForStatuses({ A: 'running', B: 'running' })
-      await expect(again.shell.getByTestId('game-status')).toContainText(site.providerOrigin)
+      // The decision is visible where origins are reviewed: the game's "Allowed sites" dialog.
+      await again.shell.getByTestId('game-OAuth Game').getByRole('button', { name: /Allowed sites/ }).click()
+      await expect(again.shell.getByRole('dialog').getByTestId(`origin-${site.providerOrigin}`)).toBeVisible()
+      await again.shell.getByRole('dialog').getByRole('button', { name: 'Done' }).click()
       const page = again.gamePages(site.gameUrl)[0] as Page
-      await page.waitForSelector('body[data-ready="true"]')
+      await waitReady(page)
       goTo(page, site.authorizeUrl())
       await expect.poll(() => page.url().startsWith(site.providerUrl)).toBe(true)
       await expect(again.shell.getByTestId('notice')).toHaveCount(0)
@@ -190,7 +193,7 @@ test('a notice disappears with its instance, and several can be pending', async 
     goTo(page, `${site.providerOrigin}/one`)
     await expect(shell.getByTestId('notice')).toBeVisible()
     goTo(page, `http://localhost:${Number(new URL(site.providerOrigin).port) + 1}/two`) // a second origin
-    await expect(shell.getByTestId('notice')).toContainText('(+1 more)')
+    await expect(shell.getByTestId('notice')).toContainText('1 more waiting')
 
     await driver.stop(a.id) // its refused navigations cannot be redone any more
     await expect(shell.getByTestId('notice')).toHaveCount(0)
@@ -217,3 +220,25 @@ test('a manual edit of the origins also clears the notice it satisfies', async (
     await removeUserData(driver.userDataDir)
   }
 })
+
+test('removing a game takes its pending notice with it', async () => {
+  const driver = await Driver.launch()
+  try {
+    const { shell } = driver
+    const game = await driver.createGame('OAuth Game', site.gameUrl)
+    const a = await driver.createInstance(game.id, 'A')
+    const page = await driver.startAndGetPage(a.id, site.gameUrl, [])
+    goTo(page, site.authorizeUrl())
+    await expect(shell.getByTestId('notice')).toBeVisible()
+
+    await shell.getByTestId('game-OAuth Game').getByRole('button', { name: 'Remove game' }).click()
+    await shell.getByRole('dialog').getByRole('button', { name: 'Remove game' }).click()
+    await expect(shell.getByRole('dialog')).toHaveCount(0)
+    await expect(shell.getByTestId('notice')).toHaveCount(0) // nothing left to allow for a game that is gone
+    expect(await shell.evaluate(() => window.gamehub.notices.list())).toMatchObject({ ok: true, data: [] })
+  } finally {
+    await driver.close()
+    await removeUserData(driver.userDataDir)
+  }
+})
+

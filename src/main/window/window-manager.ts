@@ -4,6 +4,8 @@ import type { Logger } from '../logging/logger'
 import type { BlockedHandler } from '../navigation/blocked'
 import { isAllowedTopLevelNavigation } from '../navigation/policy'
 import { PopupController } from './popup-controller'
+import { normalizeSlots } from './layout'
+import type { StageSlot } from '@shared/domain/stage-layout'
 import { SHELL_ENTRY_URL } from '../platform/app-assets'
 import {
   LoadAbortedError,
@@ -12,12 +14,6 @@ import {
   type MountedView,
   type ViewHost,
 } from '../instances/ports'
-
-/**
- * Height reserved for the shell's own UI strip; game views sit below it.
- * Keep in sync with the strip's height in src/renderer/app/App.tsx.
- */
-const CHROME_HEIGHT = 96
 
 interface ManagedView {
   readonly view: WebContentsView
@@ -35,13 +31,18 @@ interface ManagedView {
  * (ADR-0001). It creates, positions, focuses and destroys views; it knows
  * nothing about lifecycle rules, which belong to InstanceManager.
  *
- * Phase note: window creation and view layout live together here for this
- * slice. The architecture's MainWindow/LayoutController split is deferred
- * until renderer-driven layout (roadmap phase 7).
+ * Where views are shown is the RENDERER's request (ADR-0017): it reports one
+ * rectangle per running instance, Main validates, clamps and applies them, and
+ * hides every view that is not listed. Main never lays views out on its own.
+ *
+ * Phase note: window creation and view placement still live together here; the
+ * MainWindow/LayoutController split can wait until there is a second window.
  */
 export class WindowManager implements ViewHost<Session> {
   private window: BrowserWindow | null = null
   private readonly views = new Map<string, ManagedView>()
+  /** The last layout the renderer asked for, re-applied when a view appears or the window resizes. */
+  private requestedSlots: readonly StageSlot[] = []
 
   /** Set by the composition root: where "blocked, ask the user" requests go (ADR-0016). */
   blockedHandler: BlockedHandler | undefined
@@ -73,7 +74,7 @@ export class WindowManager implements ViewHost<Session> {
     this.window = window
 
     window.once('ready-to-show', () => window.show())
-    const onResize = (): void => this.relayout()
+    const onResize = (): void => this.reapplyLayout()
     window.on('resize', onResize)
     window.once('closed', () => {
       window.off('resize', onResize)
@@ -157,6 +158,8 @@ export class WindowManager implements ViewHost<Session> {
     contents.on('will-redirect', guard)
     contents.on('render-process-gone', onGone)
 
+    // Hidden until the renderer places it: a fresh view must never flash over the UI.
+    view.setVisible(false)
     window.contentView.addChildView(view)
     this.views.set(instanceId, {
       view,
@@ -170,7 +173,7 @@ export class WindowManager implements ViewHost<Session> {
         contents.off('render-process-gone', onGone)
       },
     })
-    this.relayout()
+    this.reapplyLayout() // the renderer may already have asked for this instance's slot
     this.log.info('view.created', { instanceId, count: this.views.size })
 
     return {
@@ -200,7 +203,6 @@ export class WindowManager implements ViewHost<Session> {
       managed.contents.close()
       await destroyed
     }
-    this.relayout()
     this.log.info('view.destroyed', { instanceId, count: this.views.size })
   }
 
@@ -228,26 +230,30 @@ export class WindowManager implements ViewHost<Session> {
   }
 
   /**
-   * Temporary even grid below the shell strip. Renderer-driven layout
-   * (ADR-0001: renderer expresses intent, Main applies it) replaces this later.
+   * Applies the renderer's layout request (ADR-0017). Called for every request, so it is
+   * cheap: no logging, no allocation beyond the normalized list.
    */
-  private relayout(): void {
+  applyLayout(requested: readonly StageSlot[]): void {
+    this.requestedSlots = requested
+    this.reapplyLayout()
+  }
+
+  private reapplyLayout(): void {
     const window = this.window
-    if (window === null || window.isDestroyed() || this.views.size === 0) return
-    const { width, height } = window.getContentBounds()
-    const top = CHROME_HEIGHT
-    const areaHeight = Math.max(0, height - top)
-    const count = this.views.size
-    const columns = Math.ceil(Math.sqrt(count))
-    const rows = Math.ceil(count / columns)
-    const cellWidth = Math.floor(width / columns)
-    const cellHeight = Math.floor(areaHeight / rows)
-    let index = 0
-    for (const { view } of this.views.values()) {
-      const column = index % columns
-      const row = Math.floor(index / columns)
-      view.setBounds({ x: column * cellWidth, y: top + row * cellHeight, width: cellWidth, height: cellHeight })
-      index++
+    if (window === null || window.isDestroyed()) return
+    const [width, height] = window.getContentSize()
+    const slots = normalizeSlots(this.requestedSlots, { width: width ?? 0, height: height ?? 0 }, (id) => this.views.has(id))
+
+    const shown = new Set<string>()
+    for (const slot of slots) {
+      const managed = this.views.get(slot.instanceId)
+      if (managed === undefined) continue
+      managed.view.setBounds({ x: slot.x, y: slot.y, width: slot.width, height: slot.height })
+      managed.view.setVisible(true)
+      shown.add(slot.instanceId)
+    }
+    for (const [instanceId, managed] of this.views) {
+      if (!shown.has(instanceId)) managed.view.setVisible(false)
     }
   }
 

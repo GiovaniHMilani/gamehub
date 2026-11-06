@@ -197,6 +197,21 @@ describe('games.allowed_origins migration', () => {
     }
   })
 
+  it('update replaces name, address and description, and nothing else', () => {
+    const db = openDatabase(':memory:', MIGRATIONS)
+    try {
+      const repos = createRepositories(db.db)
+      const game = repos.games.create({ id: 'g1', name: 'Old', startUrl: 'https://old.example/', description: 'old text', allowedOrigins: ['https://auth.example.com'] }, 10)
+      const updated = repos.games.update(game.id, { name: 'New', startUrl: 'https://new.example/', description: '' }, 20)
+      expect(updated).toMatchObject({ id: 'g1', name: 'New', startUrl: 'https://new.example/', description: '', updatedAt: 20 })
+      expect(updated?.createdAt).toBe(10) // history is kept
+      expect(updated?.allowedOrigins).toEqual(['https://auth.example.com']) // approved sites are not touched
+      expect(repos.games.update('missing', { name: 'x', startUrl: 'https://x.example/', description: '' }, 30)).toBeUndefined()
+    } finally {
+      db.close()
+    }
+  })
+
   it('round-trips allowed origins through SQLite', () => {
     const db = openDatabase(':memory:', MIGRATIONS)
     try {

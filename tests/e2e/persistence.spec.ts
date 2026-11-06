@@ -5,7 +5,7 @@ import { mkdtemp, readdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { startSessionTestSite, type SessionTestSite } from '../fixtures/session-test-site/server'
-import { Driver, sessionInfos, setIdentity, snapshot, type Snap } from './helpers/driver'
+import { Driver, sessionInfos, setIdentity, snapshot, type Snap, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
 
 let site: SessionTestSite
@@ -21,7 +21,7 @@ const profileOf = (s: Snap): string => `${s.marker}|${s.localStorage}`
 
 async function allSnapshots(driver: Driver): Promise<Snap[]> {
   const pages: Page[] = driver.gamePages(site.url)
-  for (const page of pages) await page.waitForSelector('body[data-ready="true"]')
+  for (const page of pages) await waitReady(page)
   return Promise.all(pages.map((page) => snapshot(page)))
 }
 

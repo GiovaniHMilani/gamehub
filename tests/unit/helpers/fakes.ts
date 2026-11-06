@@ -102,6 +102,12 @@ export class FakeHost implements ViewHost<FakeSession> {
     }
   }
 
+  readonly focused: string[] = []
+
+  focusView(instanceId: string): void {
+    this.focused.push(instanceId)
+  }
+
   readonly originUpdates: Array<{ instanceId: string; origins: readonly string[] }> = []
 
   updateAllowedOrigins(instanceId: string, origins: readonly string[]): void {

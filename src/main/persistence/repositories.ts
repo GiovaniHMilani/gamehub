@@ -20,16 +20,37 @@ export class GameRepository {
   constructor(private readonly db: Db) {}
 
   create(
-    game: { id: string; name: string; startUrl: string; allowedOrigins?: readonly string[] },
+    game: { id: string; name: string; startUrl: string; description?: string; allowedOrigins?: readonly string[] },
     now: number,
   ): Game {
-    const row = { ...game, allowedOrigins: [...(game.allowedOrigins ?? [])], createdAt: now, updatedAt: now }
+    const row = {
+      ...game,
+      description: game.description ?? '',
+      allowedOrigins: [...(game.allowedOrigins ?? [])],
+      createdAt: now,
+      updatedAt: now,
+    }
     this.db.insert(games).values(row).run()
     return row
   }
 
   get(id: string): Game | undefined {
     return this.db.select().from(games).where(eq(games.id, id)).get()
+  }
+
+  /** Replaces the editable fields. Returns the updated game, or undefined if it does not exist. */
+  update(id: string, fields: { name: string; startUrl: string; description: string }, now: number): Game | undefined {
+    this.db.update(games).set({ ...fields, updatedAt: now }).where(eq(games.id, id)).run()
+    return this.get(id)
+  }
+
+  /**
+   * Deletes the game row. The foreign key from accounts is RESTRICT, so this throws while any
+   * account still points at the game: accounts must be removed first, through the instance path
+   * that also wipes their browser data.
+   */
+  remove(id: string): void {
+    this.db.delete(games).where(eq(games.id, id)).run()
   }
 
   /** Returns the updated game, or undefined if it does not exist. */

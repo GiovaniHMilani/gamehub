@@ -6,7 +6,9 @@ import type {
   Notice,
   ResolveNoticeInput,
   SetAllowedOriginsInput,
+  UpdateGameInput,
 } from '../domain/types'
+import type { StageSlot } from '../domain/stage-layout'
 import type { InstanceEvent, InstancesSnapshot } from './instance-events'
 import type { Result } from './result'
 
@@ -18,6 +20,18 @@ export interface GameHubApi {
   readonly games: {
     create(input: CreateGameInput): Promise<Result<GameSummary>>
     list(): Promise<Result<readonly GameSummary[]>>
+    /**
+     * Replaces a game's name, address and description. Accounts keep their data, but cookies and storage
+     * belong to a site, so a different address may sign accounts out; running accounts keep their current
+     * page until they are restarted.
+     */
+    update(input: UpdateGameInput): Promise<Result<GameSummary>>
+    /**
+     * Removes a game AND all of its accounts: each one is stopped and its login and browser
+     * data are deleted. Irreversible. Accounts are removed one by one, so if one fails the game
+     * stays with the accounts that were not removed yet.
+     */
+    remove(gameId: string): Promise<Result<null>>
     /** Replaces the game's extra allowed origins. Applies at once to the game's running instances. */
     setAllowedOrigins(input: SetAllowedOriginsInput): Promise<Result<GameSummary>>
   }
@@ -32,6 +46,8 @@ export interface GameHubApi {
     /** "Close": stops the view, keeps account + session data. */
     stop(instanceId: string): Promise<Result<InstanceSummary>>
     restart(instanceId: string): Promise<Result<InstanceSummary>>
+    /** Gives keyboard focus to a RUNNING instance's view. INVALID_STATE if it is not running. */
+    focus(instanceId: string): Promise<Result<InstanceSummary>>
     /** Deletes the account, its instance and all browser data. Irreversible. */
     remove(instanceId: string): Promise<Result<null>>
     /** Sequenced state events (changed/removed). Returns an unsubscribe function. */
@@ -43,5 +59,12 @@ export interface GameHubApi {
     resolve(input: ResolveNoticeInput): Promise<Result<null>>
     /** Receives the FULL list of pending notices on every change. Returns an unsubscribe function. */
     onChanged(listener: (notices: readonly Notice[]) => void): () => void
+  }
+  readonly stage: {
+    /**
+     * Says where each running instance's view should be shown. Fire-and-forget: Main
+     * validates and clamps it, and hides every view that is not listed.
+     */
+    setLayout(slots: readonly StageSlot[]): void
   }
 }
