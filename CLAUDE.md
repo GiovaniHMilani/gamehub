@@ -37,9 +37,15 @@ An instance MUST have its own:
 
 Different accounts MUST NOT share browser session state.
 
-Use Electron persistent partitions such as:
+The partition belongs to the GameAccount (ADR-0002). Each account has an
+immutable `partitionId` (UUID generated in Main, `UNIQUE` in SQLite), and an
+account has at most one GameInstance:
 
-`persist:gamehub-instance-<instance-id>`
+`persist:gh-<partitionId>`
+
+Never derive a partition from renderer input, URLs or user strings. Only the
+SessionManager resolves partitions. If a session fails, enter an error state;
+never silently create a new partition.
 
 Do not use `defaultSession` for game instances.
 
@@ -116,16 +122,17 @@ Do not weaken Electron security settings merely to make a feature work.
 
 A GameInstance should have an explicit lifecycle.
 
-Typical states:
+Lifecycle states (ADR-0004):
 
-- created
-- mounting
+- stopped
+- starting
 - running
-- hidden
-- suspended
 - stopping
-- destroyed
+- crashed
 - error
+
+Visibility, focus and mute are a separate presentation axis, not lifecycle
+states. Suspension is not part of v1.
 
 The lifecycle must be owned by the Main process.
 
@@ -361,6 +368,8 @@ explain the architectural impact before making a broad change.
 Prefer small, reversible changes.
 
 Record important architectural decisions in `docs/decisions/`.
+
+The current architecture is described in `docs/architecture/overview.md`.
 
 ---
 

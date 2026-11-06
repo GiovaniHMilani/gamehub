@@ -78,18 +78,22 @@ Do not merge these concepts unless there is a documented reason.
 
 ## 2. Session isolation
 
-Every GameInstance needs a unique persistent Electron partition.
+Every GameAccount owns a unique persistent Electron partition (ADR-0002).
+An account has at most one GameInstance (`game_instances.account_id UNIQUE`).
 
-Preferred conceptual format:
+Format:
 
-`persist:gamehub-instance-<instance-id>`
+`persist:gh-<partitionId>`
+
+where `partitionId` is an immutable UUID generated in Main when the account is
+created and stored in `game_accounts.partition_id` (`UNIQUE`).
 
 For example:
 
-`persist:gamehub-instance-7b2f...`
+`persist:gh-7b2f...`
 
-The partition identifier must be deterministic for the instance and unique
-across instances.
+The partition identifier must be stable for the account across restarts,
+unique across accounts, and never reused after deletion.
 
 Two different accounts must never intentionally use the same partition.
 
@@ -112,11 +116,14 @@ Electron Sessions for GameInstances.
 It should provide a narrow API conceptually similar to:
 
 ```ts
-getSession(instanceId)
-createSession(instanceId)
-clearSession(instanceId)
-destroySession(instanceId)
+get(accountId)              // resolves partitionId from the repository
+clearBrowserData(accountId)
+markForDeletion(accountId)  // tombstone; directory deleted on next boot (ADR-0008)
 ```
+
+A loaded Electron session cannot be unloaded from the process, so physical
+deletion of a partition directory happens at the next startup, before any
+`session.fromPartition` call.
 
 Do not expose raw Electron Session objects to the renderer.
 
@@ -199,29 +206,17 @@ directly through preload.
 
 Use explicit lifecycle states.
 
-Recommended states:
+States (ADR-0004):
 
 ```text
-created
-  ↓
-mounting
-  ↓
-running
-  ↓
-hidden
-  ↓
-suspended
-  ↓
-stopping
-  ↓
-destroyed
+stopped → starting → running → stopping → stopped
+starting --load failure--> error
+running --render-process-gone--> crashed --reload--> starting
 ```
 
-Error paths may transition into:
-
-```text
-error
-```
+Visibility, focus and mute are a separate presentation axis
+(`{ attached, visible, focused, muted }`), not lifecycle states.
+Suspension is not part of v1.
 
 Rules:
 
@@ -238,13 +233,14 @@ Rules:
 
 On application startup:
 
-1. Load GameAccounts and instance metadata from SQLite.
-2. Determine which instances should be restored.
-3. Reconstruct their partition identifiers.
-4. Obtain their persistent Electron sessions.
-5. Create WebContentsViews.
-6. Restore their URLs/layout state.
-7. Mount them into the main window.
+1. Process partition tombstones (before any `fromPartition`).
+2. Load GameAccounts and instance metadata from SQLite.
+3. Select instances with `restoreOnLaunch`.
+4. Read each account's stored `partitionId` (never generate one here).
+5. Obtain their persistent Electron sessions via SessionManager.
+6. Create WebContentsViews and load the game's `startUrl` (the current URL is
+   not persisted; it may contain OAuth tokens).
+7. Mount them into the main window with bounded concurrency.
 
 Do not create a new random partition during restoration.
 
@@ -333,11 +329,11 @@ Example:
 ```text
 PokéIdle
 ├── Account A
-│   └── persist:gamehub-instance-A
+│   └── persist:gh-<partitionId-A>
 ├── Account B
-│   └── persist:gamehub-instance-B
+│   └── persist:gh-<partitionId-B>
 └── Account C
-    └── persist:gamehub-instance-C
+    └── persist:gh-<partitionId-C>
 ```
 
 All three may load the same URL while remaining completely separate browser

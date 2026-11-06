@@ -27,11 +27,10 @@ node_modules/
 # Build / Distribution
 # ============================================================
 
-dist/
-dist-electron/
-out/
-build/
-release/
+/dist/
+/dist-electron/
+/out/
+/release/
 
 *.asar
 *.asar.unpacked/
@@ -69,12 +68,12 @@ blob-report/
 # GameHub local application data
 # ============================================================
 
-.gamehub-data/
-gamehub-data/
-session-data/
-sessions/
-browser-data/
-browser-sessions/
+/.gamehub-data/
+/gamehub-data/
+/session-data/
+/sessions/
+/browser-data/
+/browser-sessions/
 
 # ============================================================
 # SQLite / Local databases
@@ -95,8 +94,8 @@ browser-sessions/
 # ============================================================
 
 *.log
-logs/
-log/
+/logs/
+/log/
 
 npm-debug.log*
 yarn-debug.log*
@@ -108,28 +107,27 @@ pnpm-debug.log*
 # ============================================================
 
 # Chromium/Electron profiles
-Default/
-Local\ State/
-Cookies
-Cookies-journal
-History
-History-journal
-Network/
-GPUCache/
-Code\ Cache/
-Service\ Worker/
-Session\ Storage/
-Sessions/
-Storage/
+# Real profiles live in the OS userData dir, never in the repo. Anchored to the
+# root so source folders (e.g. src/main/browser-sessions) are not ignored.
+/Default/
+/Local\ State
+/Cookies
+/Cookies-journal
+/Network/
+/GPUCache/
+/Code\ Cache/
+/Service\ Worker/
+/Session\ Storage/
+/Partitions/
 
 # ============================================================
 # Temporary files
 # ============================================================
 
-tmp/
-temp/
-.tmp/
-.temp/
+/tmp/
+/temp/
+/.tmp/
+/.temp/
 
 *.tmp
 *.temp
@@ -197,9 +195,9 @@ Desktop.ini
 # Local scripts / scratch files
 # ============================================================
 
-scratch/
-sandbox/
-.local/
+/scratch/
+/sandbox/
+/.local/
 
 # ============================================================
 # Generated archives
@@ -225,4 +223,3 @@ sandbox/
 *.backup
 *.orig
 *.rej
-EOF
