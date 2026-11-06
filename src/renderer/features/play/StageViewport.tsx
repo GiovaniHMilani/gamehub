@@ -1,6 +1,6 @@
 import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { api } from '../../api'
-import { Button } from '../../components/common/Button'
+import { Icon } from '../../components/common/Icon'
 import { useGameStyle } from '../../components/common/Monogram'
 import { StatusLamp } from '../../components/common/StatusLamp'
 import { useStageSlots } from '../../hooks/useStageSlots'
@@ -69,8 +69,12 @@ const TileHeader = memo(function TileHeader({ instanceId, rect }: { instanceId: 
       <span className="tile-label" title={`${instance.label} in ${gameName ?? 'unknown game'}`}>
         {instance.label} <span className="tile-game">{gameName}</span>
       </span>
-      <Button size="small" tone="quiet" onClick={() => openInstance(instanceId)}>Focus</Button>
-      <Button size="small" tone="quiet" onClick={() => void performInstanceAction(api(), instanceId, 'stop')}>Stop</Button>
+      <button type="button" className="icon-btn icon-btn-small" aria-label="Focus" title="Focus on this account" onClick={() => openInstance(instanceId)}>
+        <Icon name="expand" size={14} />
+      </button>
+      <button type="button" className="icon-btn icon-btn-small" aria-label="Stop" title="Stop" onClick={() => void performInstanceAction(api(), instanceId, 'stop')}>
+        <Icon name="stop" size={12} />
+      </button>
     </div>
   )
 })

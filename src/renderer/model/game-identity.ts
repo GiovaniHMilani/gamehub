@@ -1,6 +1,6 @@
 /**
  * A game's visual identity. Colours are handed out in order of creation from a fixed set that
- * stays legible on both the light canvas and the dark sidebar, so the first ten games are
+ * stays legible on the dark canvas, so the first ten games are
  * GUARANTEED different colours (a hash would collide often) and a game keeps its colour as
  * more are added later. `gameHue` (a hash of the id) is only the fallback for a game the UI
  * has not loaded yet.
@@ -29,6 +29,17 @@ export function assignHues(games: readonly HueSource[]): Record<string, number> 
     hues[game.id] = HUES[index % HUES.length] ?? HUES[0]
   })
   return hues
+}
+
+/** How many artwork patterns the stylesheet defines (`[data-motif]` in components.css). */
+export const MOTIF_COUNT = 6
+
+/**
+ * Which of the generated artwork patterns a game wears. A hash of the id, so it never changes for
+ * a game; patterns repeat across games (hues do not) which is fine: colour tells games apart first.
+ */
+export function gameMotif(gameId: string): number {
+  return hash(`motif:${gameId}`) % MOTIF_COUNT
 }
 
 export function gameHue(gameId: string): number {

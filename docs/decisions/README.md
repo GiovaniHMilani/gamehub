@@ -23,3 +23,4 @@ Format: Status / Context / Options / Decision / Consequences / Revisit when.
 | [0017](0017-renderer-driven-stage.md) | The renderer says where game views go; Main applies it | Accepted |
 | [0018](0018-ui-state-and-styling.md) | UI state, components and styling | Accepted |
 | [0019](0019-background-instances.md) | Background instances are already throttled; no economy mode | Accepted |
+| [0020](0020-launcher-visual-identity.md) | A launcher, not a dashboard: visual identity and the shape of the shell | Accepted |

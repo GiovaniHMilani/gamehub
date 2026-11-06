@@ -6,6 +6,7 @@ import { startOAuthTestSite, type OAuthTestSite } from '../fixtures/oauth-test-s
 import { Driver, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
 import { tryOpen } from './helpers/oauth'
+import { manageGame } from './helpers/ui'
 
 let site: OAuthTestSite
 test.beforeEach(async () => {
@@ -65,7 +66,7 @@ test('blocked redirect -> notice -> Allow -> the navigation is redone, for every
     try {
       await again.waitForStatuses({ A: 'running', B: 'running' })
       // The decision is visible where origins are reviewed: the game's "Allowed sites" dialog.
-      await again.shell.getByTestId('game-OAuth Game').getByRole('button', { name: /Allowed sites/ }).click()
+      await manageGame(again.shell, 'OAuth Game', /Allowed sites/)
       await expect(again.shell.getByRole('dialog').getByTestId(`origin-${site.providerOrigin}`)).toBeVisible()
       await again.shell.getByRole('dialog').getByRole('button', { name: 'Done' }).click()
       const page = again.gamePages(site.gameUrl)[0] as Page
@@ -231,7 +232,7 @@ test('removing a game takes its pending notice with it', async () => {
     goTo(page, site.authorizeUrl())
     await expect(shell.getByTestId('notice')).toBeVisible()
 
-    await shell.getByTestId('game-OAuth Game').getByRole('button', { name: 'Remove game' }).click()
+    await manageGame(shell, 'OAuth Game', 'Remove game')
     await shell.getByRole('dialog').getByRole('button', { name: 'Remove game' }).click()
     await expect(shell.getByRole('dialog')).toHaveCount(0)
     await expect(shell.getByTestId('notice')).toHaveCount(0) // nothing left to allow for a game that is gone

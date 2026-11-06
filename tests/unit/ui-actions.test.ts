@@ -10,6 +10,7 @@ import {
   createGame,
   focusInstance,
   performInstanceAction,
+  playGame,
   resolveNotice,
   setGameOrigins,
 } from '../../src/renderer/stores/actions'
@@ -475,5 +476,83 @@ describe('startSync: loading, events, errors and recovery', () => {
     await flush()
     expect(listenerCount()).toBe(2)
     handle.stop()
+  })
+})
+
+describe('playGame: the main verb of a game', () => {
+  const startedIds = (spies: { instances: { start: { mock: { calls: unknown[][] } } } }): string[] => spies.instances.start.mock.calls.map((c) => String(c[0]))
+  const seed = (statuses: ReadonlyArray<InstanceSummary['status']>): void => {
+    useDomainStore.getState().applySync({
+      seq: 1,
+      resyncs: 0,
+      instances: statuses.map((status, i) => inst(`i${i}`, 'g1', `acc${i}`, status)),
+    })
+  }
+
+  it('with nothing running it starts every stopped account, then opens Play on the grid', async () => {
+    seed(['stopped', 'stopped', 'stopped'])
+    const { api, spies } = makeApi()
+    await playGame(api, 'g1')
+    expect(startedIds(spies).toSorted()).toEqual(['i0', 'i1', 'i2'])
+    expect(ui().screen).toBe('play')
+    expect(ui().playMode).toBe('grid') // three accounts of this game are up
+  })
+
+  it('with something running it only opens: it starts nothing, because the button says Open', async () => {
+    seed(['stopped', 'running', 'stopped', 'running'])
+    const { api, spies } = makeApi()
+    await playGame(api, 'g1')
+    expect(spies.instances.start).not.toHaveBeenCalled()
+    expect(ui()).toMatchObject({ screen: 'play', focusedInstanceId: 'i1', playMode: 'grid' }) // the two running ones
+  })
+
+  it('leaves accounts in error or crashed alone: that is Retry, a deliberate choice', async () => {
+    seed(['error', 'crashed', 'stopped'])
+    const { api, spies } = makeApi()
+    await playGame(api, 'g1')
+    expect(startedIds(spies)).toEqual(['i2'])
+  })
+
+  it('one account goes to Play in focus mode, not the grid', async () => {
+    seed(['stopped'])
+    const { api } = makeApi()
+    await playGame(api, 'g1')
+    expect(ui()).toMatchObject({ screen: 'play', focusedInstanceId: 'i0', playMode: 'focus' })
+  })
+
+  it('does not navigate when every start fails, and the failure was already reported', async () => {
+    seed(['stopped', 'stopped'])
+    const { api } = makeApi({ start: async () => fail('INVALID_STATE') })
+    await playGame(api, 'g1')
+    expect(ui().screen).toBe('library')
+    expect(ui().toasts.length).toBeGreaterThan(0)
+  })
+
+  it('a game with no accounts does nothing', async () => {
+    useDomainStore.getState().applySync({ seq: 1, resyncs: 0, instances: [] })
+    const { api, spies } = makeApi()
+    await playGame(api, 'g1')
+    expect(spies.instances.start).not.toHaveBeenCalled()
+    expect(ui().screen).toBe('library')
+  })
+
+  it('only the failed start is left out when one of several fails', async () => {
+    seed(['stopped', 'stopped'])
+    const { api } = makeApi({ start: vi.fn().mockResolvedValueOnce(fail('INVALID_STATE')).mockResolvedValue(ok(inst('i1', 'g1', 'a', 'running'))) })
+    await playGame(api, 'g1')
+    expect(ui().screen).toBe('play')
+    expect(ui().playMode).toBe('focus') // only one account came up
+  })
+})
+
+describe('performInstanceAction result', () => {
+  it('reports whether the request was carried out', async () => {
+    const gate = deferred<Result<InstanceSummary>>()
+    const { api } = makeApi({ start: () => gate.promise })
+    const first = performInstanceAction(api, 'i1', 'start')
+    expect(await performInstanceAction(api, 'i1', 'start')).toBe(false) // duplicate
+    gate.resolve(ok(inst('i1', 'g1', 'a', 'running')))
+    expect(await first).toBe(true)
+    expect(await performInstanceAction(makeApi({ start: async () => fail('INTERNAL') }).api, 'i2', 'start')).toBe(false)
   })
 })

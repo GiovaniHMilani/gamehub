@@ -6,16 +6,18 @@ isolated, persistent browser.
 Log into three accounts of one idle game, keep them all running, and jump between them. Their cookies,
 storage and logins never touch each other, and they are still there after you close and reopen the app.
 
-![The library: games, their accounts as lines, and the state of each one](docs/images/library.png)
+![The library: games as posters, their accounts as a party, and the state of each one](docs/images/library.png)
 
 ## What it does
 
 - **One account = one browser.** Every account gets its own persistent Chromium session: cookies,
   `localStorage`, `IndexedDB`, cache and service workers. Two accounts of the same game never share state.
-- **Library.** Games with their accounts as lines, each with a state lamp (stopped, starting, running,
-  stopping, error, crashed) and only the actions that make sense for that state. Search and filters.
-- **Play.** Open one account, or put all the running ones in a grid. Each game view is placed exactly where
-  the interface asks, and steps aside for dialogs.
+- **Library.** Every game is a poster with its own generated cover and colour, and its accounts are the party
+  underneath: round portraits ringed by their state (stopped, starting, running, stopping, error, crashed), with
+  only the actions that make sense for that state. **Play** is the one loud button. Managing a game (allowed
+  sites, editing, removing) lives in its menu. Search and filters.
+- **Play.** Open one account, or put all the running ones in a grid. The shell steps back (its top bar becomes
+  the toolbar) and each game view is placed exactly where the interface asks, stepping aside for dialogs.
 - **Sign-in popups.** OAuth popups run in the *same* session as the account that opened them, and only for
   sites you have allowed. Anything else is blocked, and the app asks before allowing it.
 - **Persistent.** Accounts that were running come back when the app starts. Removing an account (or a game)
@@ -50,7 +52,7 @@ before you save.
 |---|---|
 | Desktop shell | **Electron 45** (`WebContentsView`, custom `app://` protocol, `contextIsolation`, sandbox) |
 | Language | **TypeScript 6** (strict) |
-| UI | **React 19**, **Zustand 5** (read-model of what the main process reports), plain CSS with design tokens, native `<dialog>` |
+| UI | **React 19**, **Zustand 5** (read-model of what the main process reports), plain CSS with design tokens, native `<dialog>` and popover, **Bricolage Grotesque** (variable, bundled) for titles |
 | Build | **Vite 8** with **electron-vite 6** |
 | Persistence | **SQLite** through **better-sqlite3 13** and **Drizzle ORM 0.45** (migrations generated with drizzle-kit) |
 | Validation | **zod 4** at every IPC boundary |
@@ -132,10 +134,10 @@ are in `logs/` next to them. Development and tests never touch the installed app
 
 ## Tests
 
-- **442 unit tests** cover the state machine, the command queue, the session and instance managers, the
+- **452 unit tests** cover the state machine, the command queue, the session and instance managers, the
   navigation and popup policies, the `app://` path handling, event sequencing, the stores, the actions, the
   forms and the layout validation.
-- **60 end-to-end tests** run against the real app and check, among other things, that two accounts of one
+- **63 end-to-end tests** run against the real app and check, among other things, that two accounts of one
   game cannot see each other's cookies, `localStorage` or `IndexedDB`; that sessions survive a restart; that
   removal deletes the data; that popups stay in the right session; that the renderer has no Node access; and
   that the UI places every game view where it asked.
@@ -187,7 +189,7 @@ The plan and what is done are in [`docs/development/roadmap.md`](docs/developmen
 ## Documentation
 
 - [Architecture overview](docs/architecture/overview.md)
-- [Architecture decisions](docs/decisions/README.md) (ADR-0001 to ADR-0019)
+- [Architecture decisions](docs/decisions/README.md) (ADR-0001 to ADR-0020)
 - [UI design notes](docs/development/ui-design.md)
 - [Known limitations](docs/development/known-limitations.md)
 - [Roadmap](docs/development/roadmap.md)

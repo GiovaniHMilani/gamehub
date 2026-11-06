@@ -15,8 +15,12 @@ body {
   font-family: var(--font);
   font-size: var(--text-base);
   line-height: 1.45;
-  color: var(--ink-900);
-  background: var(--paper);
+  color: var(--text);
+  /* a static aura, painted once: warm light at the top right, a cool one at the bottom left */
+  background:
+    radial-gradient(1100px 560px at 85% -12%, rgb(255 179 64 / 0.07), transparent 62%),
+    radial-gradient(900px 520px at -8% 112%, rgb(124 92 255 / 0.1), transparent 60%),
+    var(--night);
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   overflow: hidden; /* the shell never scrolls as a whole; its regions do */
@@ -29,15 +33,20 @@ p {
   margin: 0;
 }
 
+h1,
+h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
 h1 {
-  font-size: var(--text-md);
-  font-weight: 650;
-  letter-spacing: -0.005em;
+  font-size: var(--text-lg);
+  font-weight: 700;
 }
 
 h2 {
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: 650;
 }
 
 button,
@@ -49,16 +58,17 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--signal);
+  outline: 2px solid var(--ember);
   outline-offset: 2px;
 }
 
-.sidebar :focus-visible {
-  outline-color: #7fd1d8;
+::selection {
+  background: rgb(255 179 64 / 0.35);
 }
 
-::selection {
-  background: var(--signal-wash);
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--night-4) transparent;
 }
 
 .visually-hidden {

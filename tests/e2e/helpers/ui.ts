@@ -10,6 +10,31 @@ export const stage = (shell: Page): Locator => shell.getByTestId('stage')
 export const statusOf = (shell: Page, label: string): Locator => row(shell, label).locator('[data-status]')
 export const toast = (shell: Page): Locator => shell.getByRole('status')
 
+/** A game's management menu (Allowed sites, Edit game, Remove game): the quiet controls live behind its menu button. */
+export async function manageGame(shell: Page, gameName: string, item: string | RegExp): Promise<void> {
+  await shell.getByRole('button', { name: `Manage ${gameName}` }).click()
+  await shell.getByRole('menuitem', { name: item }).click()
+}
+
+/** What an account offers beyond its main verb and Stop (Restart, Remove) lives in its menu. */
+export async function accountMenu(shell: Page, label: string, item: string): Promise<void> {
+  await row(shell, label).getByRole('button', { name: `More for ${label}` }).click()
+  await shell.getByRole('menuitem', { name: item }).click()
+}
+
+/** The entries of an account's menu, read without choosing one. */
+export async function accountMenuItems(shell: Page, label: string): Promise<string[]> {
+  await row(shell, label).getByRole('button', { name: `More for ${label}` }).click()
+  const items = await shell.getByRole('menu', { name: `More for ${label}` }).getByRole('menuitem').allInnerTexts()
+  await shell.keyboard.press('Escape')
+  await expect(shell.getByRole('menu')).toHaveCount(0)
+  return items.map((text) => text.trim())
+}
+
+/** The visible controls of a row, by accessible name (icon buttons carry their name in aria-label). */
+export const actionNames = (container: Locator): Promise<string[]> =>
+  container.getByRole('button').evaluateAll((elements) => elements.map((el) => el.getAttribute('aria-label') ?? (el.textContent ?? '').trim()))
+
 export async function goTo(shell: Page, screen: 'Library' | 'Play' | 'Settings'): Promise<void> {
   await shell.getByRole('navigation', { name: 'Main' }).getByRole('button', { name: new RegExp(`^${screen}`) }).click()
 }

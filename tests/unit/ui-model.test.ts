@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { GameSummary, InstanceSummary } from '@shared/domain/types'
 import { INSTANCE_STATUSES } from '@shared/domain/types'
-import { assignHues, gameHost, gameHue, monogram } from '../../src/renderer/model/game-identity'
+import { MOTIF_COUNT, assignHues, gameHost, gameHue, gameMotif, monogram } from '../../src/renderer/model/game-identity'
 import { actionsFor, isBusy, needsAttention, statusLabel } from '../../src/renderer/model/instance-actions'
 import { describeFailure, describeInstanceError } from '../../src/renderer/model/messages'
 import { buildIndexes, NO_IDS } from '../../src/renderer/stores/domain-store'
@@ -211,5 +211,21 @@ describe('selectors', () => {
       [inst('x', 'g1', 'one', 'running'), inst('y', 'g2', 'two', 'running'), inst('z', 'g2', 'one', 'running'), inst('w', 'g2', 'zzz', 'stopped')],
     )
     expect(running.runningIds).toEqual(['z', 'y', 'x'])
+  })
+})
+
+describe('gameMotif', () => {
+  it('is stable for a game and always one of the patterns the stylesheet defines', () => {
+    for (const id of ['a', 'b', 'c', 'game-1', '9f2c1e0a-1111-4222-8333-444455556666']) {
+      expect(gameMotif(id)).toBe(gameMotif(id))
+      expect(gameMotif(id)).toBeGreaterThanOrEqual(0)
+      expect(gameMotif(id)).toBeLessThan(MOTIF_COUNT)
+      expect(Number.isInteger(gameMotif(id))).toBe(true)
+    }
+  })
+
+  it('uses more than one pattern across many games', () => {
+    const used = new Set(Array.from({ length: 60 }, (_, i) => gameMotif(`game-${i}`)))
+    expect(used.size).toBeGreaterThan(2)
   })
 })

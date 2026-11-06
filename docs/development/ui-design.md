@@ -1,48 +1,38 @@
 # UI design
 
-The shell is a desk for running several accounts of one web game side by side. Its job:
-see at a glance what is running, start and stop accounts, and jump into one.
+The shell is a launcher: a place to open, watch and play web games, with several accounts of each
+running side by side. The reasoning and the rejected options are in ADR-0020; this is the working
+reference. (The Phase 7 design, a light canvas with accounts as table lines, was replaced.)
 
-## Plan
+## Tokens
 
-- **Colour.** Ink `#1b2430` for the sidebar and text (blue-tinted slate, never a flat black),
-  cool paper `#eef1f5` for the canvas, hairline `#d3dae3`, one action colour `#0e7c86`, and one
-  colour **per game** from a fixed ten-hue palette. State lamps: green, amber, red, grey.
-- **Type.** The system UI face (native on macOS and Windows), 13 px base, tabular numerals,
-  sentence case. No uppercase labels.
-- **Layout.** Dark sidebar (navigation, the running accounts, a live indicator) and a light
-  work area. The Library lists games, and each game's accounts are **lines**, not cards,
-  separated by hairlines and carried by a rail in the game's colour.
-- **The one memorable thing.** The account line: game-coloured rail, state lamp, name, state in
-  words, and only the buttons that make sense for that state. Everything else stays quiet.
+| | |
+|---|---|
+| Night | `#16121f` canvas, `#110e19` rail, `#1e1929` surface, `#282238` raised, `#342d48` raised 2 |
+| Text | `#f4f0fa`, muted `#a79fbd`, faint `#7d7594` |
+| Ember (the action) | `#ffb340` to `#ff9419`; ink on it `#2a1700` |
+| State | running `#52d391`, changing `#f5c04b`, problem `#ff6e6e`, stopped `#7d7594` |
+| A game | `--game` `hsl(h 75% 62%)`, `--game-mid` `hsl(h 58% 36%)`, `--game-deep` `hsl(h+24 52% 15%)`; ten hues handed out by creation order |
+| Radius | poster 20, tile 14, control 12, pills and portraits fully round |
+| Type | Bricolage Grotesque for titles, numbers and Play; system UI face for body, 14 px; scale 12.5 / 14 / 16 / 21 / 27 |
 
-## Review against the generic defaults
+## Components
 
-Done before building, and again on screenshots of the real app:
+- **Poster** (`game-panel`): generated cover, title, one line (description, else host), counts as words,
+  Play, the game menu. Under it the party.
+- **Party member** (`session`): portrait, name, state in words, main verb, Stop, menu.
+- **Rail**: mark, Library / Play / Settings, the running accounts as portraits.
+- **Play**: the top bar is the toolbar; tile headers are 30 px; the game views take the rest.
+- **Menu**: platform popover anchored to its button.
 
-- Not the cream + serif + terracotta page, and not near-black + one acid accent: the sidebar is
-  blue-ink, the action colour only marks actions, and identity comes from many per-game hues.
-- No kit of identical rounded cards with the same soft shadow: there are no cards and no shadows
-  except the dialog.
-- No tracked all-caps eyebrow labels, no `A · B · C` meta strings (counts read "3 accounts, 2
-  running"), no `→` on buttons, no spaced-dash labels.
-- State is never colour alone: ring (stopped), dot (running), pulsing dot (starting, stopping),
-  diamond (error, crashed), and always the word next to it.
+## Rules kept from the earlier design
+- State is never colour alone: ring style, lamp shape and a word.
+- A solid control is reserved for what matters: Play (ember), and Remove in its confirmation (red).
+- Sentence case, no tracked all-caps eyebrows, no `A · B · C` strings, no arrows on buttons.
+- Plain words: "Allowed sites", not "origins".
 
-## What the visual review changed
-
-1. Every game came out the same blue. Not a hash collision, as first assumed: a CSS custom
-   property computed with `var(--hue)` on `:root` is inherited already resolved. The colours are
-   now resolved in JavaScript and set on each game's element, assigned in order of creation so
-   the first ten games are always different. A test now reads the computed colours.
-2. Too many solid buttons (every Start, every Add account) hid which accounts were running.
-   Now a solid button is reserved for what matters: Open (running), Retry (problem), and the
-   single global Add game. Start and Add account are outlined, Allowed sites is quiet.
-3. The final "Remove account" read as plain red text. It is now a solid red button
-   (`destructive`), distinct from the quiet red row action (`danger`).
-
-## Verified at 960 x 600, 1280 x 800 and 1600 x 1000
-
-Library (empty, populated, an account in error, search, filter), the four dialogs, the
-blocked-request notice, Play (one and all), Settings. Nothing is clipped or overlapping; at the
-smallest window every account button stays inside the window.
+## Verified
+At 960 x 600 (the E2E minimum), 1280 x 720, 1440 x 900, 1600 x 900 and 1920 x 1080: empty library, one
+game with and without accounts, three games with running, stopped and failed accounts, twelve games,
+the filter, both menus, the add and edit dialogs, the blocked-site notice, Settings, Play with one
+account and with all (composited with the real game views).

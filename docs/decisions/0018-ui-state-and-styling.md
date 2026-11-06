@@ -38,3 +38,7 @@ Accepted. Refines ADR-0011 (toolchain) for the renderer.
   first ten games never share one, and it is resolved in JavaScript and set as CSS
   variables on the game's element (a custom property computed from `var(--hue)` on
   `:root` would not reach its descendants).
+
+## Update (Phase 7.6)
+The visual decisions here (light work area, accounts as table lines, no cards) were replaced by ADR-0020. The state
+model, the stores, the identity-preserving indexes and the plain-CSS-tokens choice stand.

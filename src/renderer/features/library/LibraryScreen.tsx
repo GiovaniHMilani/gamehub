@@ -1,5 +1,6 @@
 import { useShallow } from 'zustand/react/shallow'
 import { Button } from '../../components/common/Button'
+import { Icon } from '../../components/common/Icon'
 import { StatePanel } from '../../components/common/StatePanel'
 import { useDomainStore } from '../../stores/domain-store'
 import { visibleGameIds } from '../../stores/selectors'
@@ -23,24 +24,40 @@ export function LibraryScreen() {
 
   if (gameCount === 0) {
     return (
-      <StatePanel title="No games yet">
-        <p>Add your first game to get started. Each game can have as many accounts as you like, all running side by side.</p>
-        <Button tone="primary" onClick={() => openDialog({ kind: 'addGame' })}>Add game</Button>
-      </StatePanel>
+      <div className="panel-center">
+        <div className="welcome">
+          <div className="welcome-stack" aria-hidden="true">
+            <span className="welcome-card" data-n="1" />
+            <span className="welcome-card" data-n="2" />
+            <span className="welcome-card" data-n="3">
+              <Icon name="play" size={34} />
+            </span>
+          </div>
+          <h2>No games yet</h2>
+          <p>Add a game, then give it as many accounts as you like. Each one is its own browser, so they can all play at once.</p>
+          <Button tone="play" size="large" onClick={() => openDialog({ kind: 'addGame' })}>
+            <Icon name="plus" size={16} />
+            Add game
+          </Button>
+        </div>
+      </div>
     )
   }
 
   return (
     <div className="screen">
       <div className="library-header">
-        <input
-          type="search"
-          className="search"
-          aria-label="Search games and accounts"
-          placeholder="Search games and accounts"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+        <label className="search-wrap">
+          <Icon name="library" size={16} />
+          <input
+            type="search"
+            className="search"
+            aria-label="Search games and accounts"
+            placeholder="Search games and accounts"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
         <div className="segmented" role="group" aria-label="Show">
           {FILTERS.map((entry) => (
             <button key={entry.value} type="button" aria-pressed={filter === entry.value} onClick={() => setFilter(entry.value)}>
@@ -63,9 +80,9 @@ export function LibraryScreen() {
           </Button>
         </StatePanel>
       ) : (
-        <ul className="game-list">
-          {gameIds.map((id) => (
-            <GameSection key={id} gameId={id} query={search} filter={filter} />
+        <ul className="game-grid">
+          {gameIds.map((id, index) => (
+            <GameSection key={id} gameId={id} query={search} filter={filter} index={index} />
           ))}
         </ul>
       )}

@@ -107,9 +107,9 @@ test('the UI places game views where it asks: one, all, switching, dialogs, leav
     await expect.poll(() => visibleMarkers(driver)).toEqual([markerB])
 
     // Stop what is on screen: Play falls back to the other running account instead of pointing at nothing.
-    await shell.locator('.play-toolbar').getByRole('button', { name: 'Stop' }).click()
+    await shell.locator('.topbar-play').getByRole('button', { name: 'Stop' }).click()
     await expect.poll(() => visibleMarkers(driver)).toEqual([markerA])
-    await shell.locator('.play-toolbar').getByRole('button', { name: 'Stop' }).click()
+    await shell.locator('.topbar-play').getByRole('button', { name: 'Stop' }).click()
     await expect(shell.getByRole('heading', { name: 'Nothing is running' })).toBeVisible()
     await expect.poll(() => visibleMarkers(driver)).toEqual([])
     expect(await driver.webContentsCount()).toBe(SHELL)
@@ -153,7 +153,7 @@ test('a restarted account gets its view back in the same place', async () => {
     await row(shell, 'A').getByRole('button', { name: 'Open' }).click()
     await expect.poll(() => visibleMarkers(driver)).toEqual([markerA])
 
-    await shell.locator('.play-toolbar').getByRole('button', { name: 'Restart' }).click()
+    await shell.locator('.topbar-play').getByRole('button', { name: 'Restart' }).click()
     await expect.poll(async () => (await driver.logEvents()).filter((e) => e === 'instance.starting').length).toBe(3) // 2 initial + 1
     await expect.poll(() => visibleMarkers(driver)).toEqual([markerA]) // same profile, new view, placed again
     await expect.poll(async () => sameBox((await visibleViews(app))[0]?.bounds as Box, await stageBox(shell))).toBe(true)

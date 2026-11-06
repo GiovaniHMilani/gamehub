@@ -1,55 +1,59 @@
 /*
- * Design tokens. One idea carries the identity: every game owns a hue (--hue, set per game),
- * and every account is a line with a state lamp. Everything else stays quiet.
+ * Design tokens. The identity in one sentence: games are posters with generated art, accounts are the
+ * party that plays them (round portraits ringed by their state), and the only loud thing on screen is the
+ * ember "Play". Everything else stays dark, warm and quiet so the games carry the colour.
  */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* ink: the sidebar and all text; blue-tinted slate, never a flat black */
-  --ink-900: #1b2430;
-  --ink-800: #232f3f;
-  --ink-700: #2e3c50;
-  --ink-600: #44536a;
-  --ink-500: #5b6b80;
-  --ink-300: #a3afc0;
-  --ink-100: #e4e9f1;
+  /* night: an aubergine dark, never a flat black */
+  --night: #16121f;
+  --night-rail: #110e19;
+  --night-2: #1e1929;
+  --night-3: #282238;
+  --night-4: #342d48;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.16);
 
-  /* paper: the working canvas */
-  --paper: #eef1f5;
-  --surface: #ffffff;
-  --line: #d3dae3;
-  --line-strong: #b4bfce;
+  --text: #f4f0fa;
+  --muted: #a79fbd;
+  --faint: #7d7594;
 
-  /* the single action colour */
-  --signal: #0e7c86;
-  --signal-strong: #0a626a;
-  --signal-wash: #e0f1f2;
+  /* ember: the action colour. Play, the primary verb and focus; nothing else wears it solid */
+  --ember: #ffb340;
+  --ember-strong: #ff9419;
+  --ember-ink: #2a1700;
+  --ember-wash: rgb(255 179 64 / 0.14);
 
-  /* state lamps: also told apart by shape, never by colour alone */
-  --lamp-run: #1d9a59;
-  --lamp-busy: #c4860a;
-  --lamp-bad: #c13b2c;
-  --lamp-off: #8593a6;
+  /* state: also told apart by shape (ring style, lamp glyph) and by the word, never by colour alone */
+  --ok: #52d391;
+  --warn: #f5c04b;
+  --bad: #ff6e6e;
+  --off: #7d7594;
+  --bad-wash: rgb(255 110 110 / 0.14);
+  --ok-wash: rgb(82 211 145 / 0.12);
 
-  --danger: #b3291b;
-  --danger-wash: #fbe9e6;
-  --notice-wash: #fff3c4;
-  --notice-line: #d6b100;
-
-  /* a game's colour: set per game by useGameStyle (never derived here, see the note there). These are the neutral fallback. */
-  --game: hsl(210 20% 45%);
-  --game-wash: hsl(210 30% 94%);
+  /* a game's colours: set per game by useGameStyle (never derived here, see the note there). Neutral fallback. */
+  --game: hsl(262 20% 62%);
+  --game-mid: hsl(262 20% 34%);
+  --game-deep: hsl(262 20% 15%);
 
   --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI Variable Text', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --text-sm: 12px;
-  --text-base: 13px;
-  --text-md: 15px;
-  --text-lg: 20px;
+  --font-display: 'Bricolage Grotesque Variable', ui-rounded, 'SF Pro Rounded', 'Segoe UI Variable Display', system-ui, sans-serif;
+  --text-sm: 12.5px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 21px;
+  --text-xl: 27px;
 
-  --radius-control: 6px;
-  --radius-dialog: 10px;
-  --sidebar-width: 232px;
-  --topbar-height: 52px;
+  --r-panel: 20px;
+  --r-tile: 14px;
+  --r-control: 12px;
+  --r-pill: 999px;
+  --lift: 0 14px 36px rgb(5 2 12 / 0.5);
+
+  --rail-width: 76px;
+  --topbar-height: 56px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;

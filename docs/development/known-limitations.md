@@ -70,6 +70,10 @@ decision with its own ADR and security review, not a global setting.
   (5 accounts of it ≈ 3 GB in total). Pages that play audio, or games that need full-rate
   timers while hidden, were not measured (ADR-0019). There is no way to turn the throttling
   off per game yet.
+- **No uptime or play history.** The interface shows what an account is doing now, not for how long or
+  when it last ran: the model carries neither. Both would need a domain change (ADR-0020).
+- **Posters read down the columns.** Games are laid out in columns so panels of different heights leave
+  no holes; the reading order is top to bottom, then the next column.
 - The "All" view on Play shows at most 9 accounts at once (the rest keep running).
 - Games have no change events: the game list is refetched after your own actions and
   when an account of an unknown game appears. A game added or removed by another route

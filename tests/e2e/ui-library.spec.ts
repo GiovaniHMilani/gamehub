@@ -6,7 +6,7 @@ import { expect, test } from '@playwright/test'
 import { startSessionTestSite, type SessionTestSite } from '../fixtures/session-test-site/server'
 import { Driver, setIdentity, snapshot, waitReady } from './helpers/driver'
 import { removeUserData } from './helpers/launch'
-import { addAccount, addGame, dialog, goTo, resizeWindow, row, section, statusOf, toast, topbar } from './helpers/ui'
+import { accountMenu, accountMenuItems, actionNames, addAccount, addGame, dialog, goTo, manageGame, resizeWindow, row, section, statusOf, toast, topbar, visibleViews } from './helpers/ui'
 
 let site: SessionTestSite
 test.beforeEach(async () => {
@@ -24,7 +24,7 @@ test('first run: an empty library invites adding a game, and the form explains e
   try {
     const { shell } = driver
     await expect(shell.getByRole('heading', { name: 'No games yet' })).toBeVisible()
-    await expect(shell.getByText('Nothing is running yet.')).toBeVisible()
+    await expect(shell.getByText('Nothing running')).toBeVisible()
 
     await topbar(shell).getByRole('button', { name: 'Add game' }).click()
     const dlg = dialog(shell)
@@ -112,18 +112,20 @@ test('lifecycle in the UI: each state offers the right buttons; remove asks firs
     const game = await driver.createGame('Fixture Game', site.url)
     await driver.createInstance(game.id, 'Main')
     const main = row(shell, 'Main')
-    const buttons = async (): Promise<string[]> => main.getByRole('button').allInnerTexts()
+    const buttons = (): Promise<string[]> => actionNames(main)
 
-    // stopped: Start, Remove
+    // stopped: Start in view, Remove behind the menu
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'stopped')
-    expect(await buttons()).toEqual(['Start', 'Remove'])
+    expect(await buttons()).toEqual(['Start', 'More for Main'])
+    expect(await accountMenuItems(shell, 'Main')).toEqual(['Remove'])
 
-    // running: Open, Stop, Restart
+    // running: Open and Stop in view, Restart behind the menu (and no Remove)
     await main.getByRole('button', { name: 'Start' }).click()
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'running')
-    expect(await buttons()).toEqual(['Open', 'Stop', 'Restart'])
+    expect(await buttons()).toEqual(['Open', 'Stop', 'More for Main'])
+    expect(await accountMenuItems(shell, 'Main')).toEqual(['Restart'])
 
-    await main.getByRole('button', { name: 'Restart' }).click()
+    await accountMenu(shell, 'Main', 'Restart')
     await expect.poll(async () => (await driver.logEvents()).filter((e) => e === 'instance.starting').length).toBe(2)
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'running')
     expect(await driver.webContentsCount()).toBe(SHELL + 1) // restarting never leaves a second view behind
@@ -133,7 +135,7 @@ test('lifecycle in the UI: each state offers the right buttons; remove asks firs
     expect(await driver.webContentsCount()).toBe(SHELL)
 
     // remove: nothing is deleted until confirmed, and Cancel is the default
-    await main.getByRole('button', { name: 'Remove' }).click()
+    await accountMenu(shell, 'Main', 'Remove')
     const dlg = dialog(shell)
     await expect(dlg.getByRole('heading', { name: 'Remove Main?' })).toBeVisible()
     await expect(dlg.getByRole('button', { name: 'Cancel' })).toBeFocused()
@@ -142,7 +144,7 @@ test('lifecycle in the UI: each state offers the right buttons; remove asks firs
     await expect(main).toBeVisible()
     expect(await driver.list()).toHaveLength(1)
 
-    await main.getByRole('button', { name: 'Remove' }).click()
+    await accountMenu(shell, 'Main', 'Remove')
     await dlg.getByRole('button', { name: 'Remove account' }).click()
     await expect(main).toHaveCount(0)
     await expect(toast(shell)).toContainText('Main was removed.')
@@ -162,11 +164,11 @@ test('a running account can only be removed after stopping, and the confirmation
     const main = row(shell, 'Main')
     await main.getByRole('button', { name: 'Start' }).click()
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'running')
-    expect(await main.getByRole('button').allInnerTexts()).not.toContain('Remove') // not offered while it runs
+    expect(await accountMenuItems(shell, 'Main')).not.toContain('Remove') // not offered while it runs
 
     await main.getByRole('button', { name: 'Stop' }).click()
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'stopped')
-    await main.getByRole('button', { name: 'Remove' }).click()
+    await accountMenu(shell, 'Main', 'Remove')
     await expect(dialog(shell)).toContainText("can't be undone")
     await dialog(shell).getByRole('button', { name: 'Remove account' }).click()
     await expect(main).toHaveCount(0)
@@ -200,7 +202,7 @@ test('the UI follows events it did not cause, and a dialog about a vanished acco
     await expect(row(shell, 'Charlie')).toBeVisible()
 
     // A confirmation dialog for an account that is removed elsewhere goes away, without an error.
-    await row(shell, 'Bravo').getByRole('button', { name: 'Remove' }).click()
+    await accountMenu(shell, 'Bravo', 'Remove')
     await expect(dialog(shell).getByRole('heading', { name: 'Remove Bravo?' })).toBeVisible()
     await driver.remove(b.id)
     await expect(dialog(shell)).toHaveCount(0)
@@ -225,7 +227,8 @@ test('a game that is offline shows why, offers Retry and Remove (never Stop), an
     await main.getByRole('button', { name: 'Start' }).click()
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'error')
     await expect(main).toContainText('The game refused the connection.')
-    expect(await main.getByRole('button').allInnerTexts()).toEqual(['Retry', 'Remove'])
+    expect(await actionNames(main)).toEqual(['Retry', 'More for Main']) // never Stop
+    expect(await accountMenuItems(shell, 'Main')).toEqual(['Remove'])
     expect(await driver.webContentsCount()).toBe(SHELL) // the failed view was torn down
     await expect(shell.getByRole('region', { name: 'Running accounts' }).getByRole('button')).toHaveCount(0)
 
@@ -257,7 +260,8 @@ test('a crashed game says so and can be restarted', async () => {
     const main = row(shell, 'Main')
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'crashed')
     await expect(main).toContainText('The game stopped unexpectedly.')
-    expect(await main.getByRole('button').allInnerTexts()).toEqual(['Restart', 'Remove'])
+    expect(await actionNames(main)).toEqual(['Restart', 'More for Main'])
+    expect(await accountMenuItems(shell, 'Main')).toEqual(['Remove'])
     await main.getByRole('button', { name: 'Restart' }).click()
     await expect(statusOf(shell, 'Main')).toHaveAttribute('data-status', 'running')
   } finally {
@@ -285,7 +289,7 @@ test('12 accounts stay readable at the smallest window; search and filters narro
     const overflow = await shell.evaluate(() => {
       const screen = document.querySelector('.screen') as HTMLElement
       const edge = innerWidth
-      const buttons = [...document.querySelectorAll<HTMLElement>('[data-testid^="instance-"] button, .game-head button')]
+      const buttons = [...document.querySelectorAll<HTMLElement>('[data-testid^="instance-"] button, .game-banner button')]
       return {
         page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         screen: screen.scrollWidth - screen.clientWidth,
@@ -324,7 +328,7 @@ test('12 accounts stay readable at the smallest window; search and filters narro
 
     // One change touches one row: watch the whole list while a single account changes state.
     await shell.evaluate(() => {
-      const list = document.querySelector('.game-list') as HTMLElement
+      const list = document.querySelector('.game-grid') as HTMLElement
       const touched = new Set<string>()
       const observer = new MutationObserver((records) => {
         for (const record of records) {
@@ -347,7 +351,7 @@ test('12 accounts stay readable at the smallest window; search and filters narro
   }
 })
 
-test('each game has its own colour, used consistently by its monogram, its accounts and the sidebar', async () => {
+test('each game has its own colour, used consistently by its cover, its accounts and the sidebar', async () => {
   const driver = await Driver.launch()
   try {
     const { shell } = driver
@@ -358,28 +362,48 @@ test('each game has its own colour, used consistently by its monogram, its accou
     for (const [i, game] of created.entries()) accounts.push(await driver.createInstance(game.id, `acc ${i}`))
     await expect(shell.locator('[data-testid^="game-"]')).toHaveCount(3)
     await driver.start((accounts[0] as { id: string }).id)
+    await expect(shell.locator('.party-item')).toHaveCount(1)
 
+    // What is actually PAINTED: a probe that uses the game's colour is put inside each element and its
+    // resolved colour is read back. A colour that never reaches an element through the cascade shows up here.
     const colours = await shell.evaluate((gameNames) => {
-      const paint = (element: Element | null, property: 'backgroundColor' | 'borderLeftColor'): string =>
-        element === null ? '' : getComputedStyle(element)[property]
-      return gameNames.map((name) => {
+      const painted = (host: Element | null): string => {
+        if (host === null) return ''
+        const probe = document.createElement('i')
+        probe.style.cssText = 'display:block;width:1px;height:1px;background:var(--game)'
+        host.appendChild(probe)
+        const colour = getComputedStyle(probe).backgroundColor
+        probe.remove()
+        return colour
+      }
+      return gameNames.map((name, i) => {
         const section = document.querySelector(`[data-testid="game-${name}"]`) as HTMLElement
         return {
-          monogram: paint(section.querySelector('.monogram'), 'backgroundColor'),
-          rail: paint(section.querySelector('.accounts'), 'borderLeftColor'),
+          cover: painted(section.querySelector('.game-art')),
+          account: painted(section.querySelector(`[data-testid="instance-acc ${i}"] .portrait`)),
+          panel: painted(section),
         }
       })
     }, names)
-    const monograms = colours.map((c) => c.monogram)
-    expect(new Set(monograms).size).toBe(3) // three games, three different colours
+    const covers = colours.map((c) => c.cover)
+    expect(new Set(covers).size).toBe(3) // three games, three different colours
     for (const c of colours) {
-      expect(c.monogram).not.toBe('')
-      expect(c.rail).toBe(c.monogram) // the account list wears its game's colour
+      expect(c.cover).not.toBe('')
+      expect(c.account).toBe(c.cover) // its accounts wear its colour
+      expect(c.panel).toBe(c.cover)
     }
 
-    // The sidebar entry of a running account carries the same colour as its game.
-    const sidebar = await shell.evaluate(() => getComputedStyle(document.querySelector('.running-item') as Element).borderLeftColor)
-    expect(sidebar).toBe(monograms[0])
+    // The sidebar portrait of a running account carries the same colour as its game.
+    const sidebar = await shell.evaluate(() => {
+      const probe = document.createElement('i')
+      probe.style.cssText = 'display:block;width:1px;height:1px;background:var(--game)'
+      const host = document.querySelector('.party-item') as Element
+      host.appendChild(probe)
+      const colour = getComputedStyle(probe).backgroundColor
+      probe.remove()
+      return colour
+    })
+    expect(sidebar).toBe(covers[0])
   } finally {
     await driver.close()
     await removeUserData(driver.userDataDir)
@@ -402,7 +426,7 @@ test('removing a game removes its accounts too: it says how many, stops the runn
     await expect(statusOf(shell, 'K')).toHaveAttribute('data-status', 'running')
     expect(await driver.webContentsCount()).toBe(SHELL + 2)
 
-    await section(shell, 'Doomed Game').getByRole('button', { name: 'Remove game' }).click()
+    await manageGame(shell, 'Doomed Game', 'Remove game')
     const dlg = dialog(shell)
     await expect(dlg.getByRole('heading', { name: 'Remove Doomed Game?' })).toBeVisible()
     await expect(dlg).toContainText('2 accounts')
@@ -417,7 +441,7 @@ test('removing a game removes its accounts too: it says how many, stops the runn
     await expect(statusOf(shell, 'A')).toHaveAttribute('data-status', 'running')
 
     // Confirm: the game, both accounts and the running view are gone; the other game is untouched.
-    await section(shell, 'Doomed Game').getByRole('button', { name: 'Remove game' }).click()
+    await manageGame(shell, 'Doomed Game', 'Remove game')
     await dlg.getByRole('button', { name: 'Remove game' }).click()
     await expect(dlg).toHaveCount(0)
     await expect(section(shell, 'Doomed Game')).toHaveCount(0)
@@ -465,7 +489,7 @@ test('editing a game: name, address and description change; accounts stay; runni
     const alt = await driver.createInstance(game.id, 'Alt')
     const running = await driver.startAndGetPage(main.id, site.url, [])
     const dlg = dialog(shell)
-    const edit = (): Promise<void> => section(shell, 'Old Name').getByRole('button', { name: 'Edit game' }).click()
+    const edit = (): Promise<void> => manageGame(shell, 'Old Name', 'Edit game')
 
     // Opens filled in, with no warnings, and saving without a change does not even ask Main.
     await edit()
@@ -529,7 +553,7 @@ test('editing only what does not change the site warns only as much as needed', 
     const game = await driver.createGame('Fixture Game', `${site.url}play`)
     const a = await driver.createInstance(game.id, 'Main')
     await driver.start(a.id)
-    await section(shell, 'Fixture Game').getByRole('button', { name: 'Edit game' }).click()
+    await manageGame(shell, 'Fixture Game', 'Edit game')
     const dlg = dialog(shell)
 
     await dlg.getByLabel('Name').fill('Renamed') // only the name: no warning at all
@@ -556,7 +580,7 @@ test('a game without accounts can be removed, and removing the last game brings 
     await addGame(shell, { url: site.url, name: 'Lonely Game' })
     await expect(section(shell, 'Lonely Game')).toContainText('No accounts yet')
 
-    await section(shell, 'Lonely Game').getByRole('button', { name: 'Remove game' }).click()
+    await manageGame(shell, 'Lonely Game', 'Remove game')
     await expect(dialog(shell)).toContainText('It has no accounts.')
     await dialog(shell).getByRole('button', { name: 'Remove game' }).click()
     await expect(dialog(shell)).toHaveCount(0)
@@ -579,7 +603,7 @@ test('if removing a game fails, the dialog stays open and says so in plain words
       ipcMain.handle('games:remove', () => ({ ok: false, error: { code: 'INTERNAL', message: 'SQLITE_BUSY /Users/someone/gamehub.db' } }))
     })
 
-    await section(shell, 'Stubborn Game').getByRole('button', { name: 'Remove game' }).click()
+    await manageGame(shell, 'Stubborn Game', 'Remove game')
     await dialog(shell).getByRole('button', { name: 'Remove game' }).click()
     const alert = dialog(shell).getByRole('alert')
     await expect(alert).toContainText("Couldn't remove it.")
@@ -600,9 +624,10 @@ test('allowed sites: reviewed, added (normalised and validated) and removed from
     const { shell } = driver
     const game = await driver.createGame('Fixture Game', site.url)
     await driver.createInstance(game.id, 'Main')
-    const opener = section(shell, 'Fixture Game').getByRole('button', { name: /Allowed sites/ })
-    await expect(opener).toHaveText('Allowed sites')
-    await opener.click()
+    // The entry says how many extra sites there are, once there are some.
+    await shell.getByRole('button', { name: 'Manage Fixture Game' }).click()
+    await expect(shell.getByRole('menuitem', { name: /Allowed sites/ })).toHaveText('Allowed sites')
+    await shell.getByRole('menuitem', { name: /Allowed sites/ }).click()
 
     const dlg = dialog(shell)
     await expect(dlg.getByRole('heading', { name: 'Allowed sites for Fixture Game' })).toBeVisible()
@@ -636,9 +661,9 @@ test('allowed sites: reviewed, added (normalised and validated) and removed from
     await expect(dlg.getByTestId('origin-https://*.cdn.example.com')).toBeVisible()
 
     await dlg.getByRole('button', { name: 'Done' }).click()
-    await expect(opener).toHaveText('Allowed sites (2)')
-
-    await opener.click()
+    await shell.getByRole('button', { name: 'Manage Fixture Game' }).click()
+    await expect(shell.getByRole('menuitem', { name: /Allowed sites/ })).toHaveText('Allowed sites (2)')
+    await shell.getByRole('menuitem', { name: /Allowed sites/ }).click()
     await dialog(shell).getByRole('button', { name: 'Remove https://login.example.com' }).click()
     await expect(dialog(shell).getByTestId('origin-https://login.example.com')).toHaveCount(0)
     expect(await listed()).toEqual(['https://*.cdn.example.com'])
@@ -660,7 +685,7 @@ test('settings shows the library and the sync diagnostics, which move with event
     await driver.start(a.id)
     await expect.poll(async () => Number(await shell.getByTestId('settings-seq').innerText())).toBeGreaterThan(seqBefore)
     await expect(shell.getByTestId('settings-resyncs')).toHaveText('0')
-    await expect(shell.getByText('Running', { exact: true }).locator('xpath=following-sibling::dd[1]')).toHaveText('1')
+    await expect(shell.locator('.stat').filter({ hasText: 'Running' }).locator('dd')).toHaveText('1')
   } finally {
     await driver.close()
     await removeUserData(driver.userDataDir)
@@ -727,5 +752,123 @@ test('after a restart the library is what Main restored: running accounts come b
     }
   } finally {
     await removeUserData(userData)
+  }
+})
+
+test('Play on a game starts its stopped accounts, leaves running ones alone and opens them together', async () => {
+  const driver = await Driver.launch()
+  try {
+    const { shell } = driver
+    const game = await driver.createGame('Fixture Game', site.url)
+    const a = await driver.createInstance(game.id, 'A')
+    await driver.createInstance(game.id, 'B')
+    await driver.createInstance(game.id, 'C')
+    const panel = section(shell, 'Fixture Game')
+    await driver.start(a.id) // A is already running: it must not be restarted
+
+    expect(await actionNames(panel.locator('.game-banner'))).toContain('Open') // something runs: the verb is Open
+    await expect(panel.locator('.game-counts')).toHaveText('3 accounts, 1 running')
+    await driver.stop(a.id)
+    await expect(panel.getByRole('button', { name: 'Play', exact: true })).toBeVisible() // nothing runs: the verb is Play
+
+    await driver.start(a.id)
+    const startsBefore = (await driver.logEvents()).filter((e) => e === 'instance.starting').length
+    await panel.locator('.game-banner').getByRole('button', { name: 'Open' }).click()
+    await expect(shell.getByTestId('stage')).toBeVisible()
+    await expect(shell.getByRole('group', { name: 'Layout' })).toHaveCount(0) // one account is up: nothing to arrange
+    await expect(shell.getByRole('navigation', { name: 'Main' }).getByRole('button', { name: /^Play/ })).toHaveAttribute('aria-current', 'page')
+    expect((await driver.logEvents()).filter((e) => e === 'instance.starting').length).toBe(startsBefore) // Open starts nothing
+
+    await goTo(shell, 'Library')
+    await panel.locator('.game-banner').getByRole('button', { name: 'Open' }).waitFor()
+    await driver.stop(a.id)
+    await panel.getByRole('button', { name: 'Play', exact: true }).click()
+    // It leaves the library once everything is up: three of this game, so the grid.
+    await expect(shell.getByRole('group', { name: 'Layout' }).getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'true')
+    expect((await driver.list()).map((i) => `${i.label}:${i.status}`).sort()).toEqual(['A:running', 'B:running', 'C:running'])
+    await expect.poll(async () => (await visibleViews(driver.app)).length).toBe(3)
+  } finally {
+    await driver.close()
+    await removeUserData(driver.userDataDir)
+  }
+})
+
+test('menus: they open on the keyboard, move with the arrows, close with Escape and hand focus back', async () => {
+  const driver = await Driver.launch()
+  try {
+    const { shell } = driver
+    const game = await driver.createGame('Fixture Game', site.url)
+    await driver.createInstance(game.id, 'Main')
+
+    const trigger = shell.getByRole('button', { name: 'Manage Fixture Game' })
+    await trigger.focus()
+    await shell.keyboard.press('Enter')
+    const menu = shell.getByRole('menu', { name: 'Manage Fixture Game' })
+    await expect(menu).toBeVisible()
+    expect((await menu.getByRole('menuitem').allInnerTexts()).map((t) => t.trim())).toEqual(['Allowed sites', 'Edit game', 'Remove game'])
+    await expect(menu.getByRole('menuitem').first()).toBeFocused() // opens on its first entry
+    await shell.keyboard.press('ArrowDown')
+    await expect(menu.getByRole('menuitem', { name: 'Edit game' })).toBeFocused()
+    await shell.keyboard.press('ArrowUp')
+    await shell.keyboard.press('ArrowUp') // wraps
+    await expect(menu.getByRole('menuitem', { name: 'Remove game' })).toBeFocused()
+
+    await shell.keyboard.press('Escape')
+    await expect(menu).toBeHidden()
+    await expect(trigger).toBeFocused()
+
+    // Choosing an entry closes the menu and does what it says; clicking elsewhere closes it too.
+    await trigger.click()
+    await shell.getByRole('menuitem', { name: 'Edit game' }).click()
+    await expect(dialog(shell).getByRole('heading', { name: 'Edit Fixture Game' })).toBeVisible()
+    await shell.keyboard.press('Escape')
+    await trigger.click()
+    await expect(menu).toBeVisible()
+    await shell.getByRole('heading', { name: 'Library' }).click()
+    await expect(menu).toBeHidden()
+  } finally {
+    await driver.close()
+    await removeUserData(driver.userDataDir)
+  }
+})
+
+test('state is never told by colour alone: ring style, lamp shape and the word differ for every state', async () => {
+  const driver = await Driver.launch()
+  try {
+    const { shell } = driver
+    const port = Number(new URL(site.url).port)
+    const game = await driver.createGame('Fixture Game', site.url)
+    const off = await driver.createInstance(game.id, 'Off')
+    const on = await driver.createInstance(game.id, 'On')
+    await driver.start(on.id)
+    const dead = await driver.createGame('Dead Game', 'http://127.0.0.1:9/')
+    const broken = await driver.createInstance(dead.id, 'Broken')
+    await driver.start(broken.id).catch(() => undefined)
+    void off
+    void port
+    await expect(statusOf(shell, 'Broken')).toHaveAttribute('data-status', 'error')
+
+    const shapes = await shell.evaluate(() => {
+      const read = (label: string) => {
+        const row = document.querySelector(`[data-testid="instance-${label}"]`) as HTMLElement
+        const portrait = row.querySelector('.portrait') as HTMLElement
+        const lamp = row.querySelector('.lamp') as HTMLElement
+        return {
+          word: (row.querySelector('[data-status]') as HTMLElement).innerText.trim(),
+          ring: getComputedStyle(portrait, '::before').borderTopStyle,
+          lampRadius: getComputedStyle(lamp).borderTopLeftRadius,
+          lampTurned: getComputedStyle(lamp).transform !== 'none',
+          lampHollow: getComputedStyle(lamp).backgroundColor === 'rgba(0, 0, 0, 0)',
+        }
+      }
+      return { stopped: read('Off'), running: read('On'), error: read('Broken') }
+    })
+    expect(shapes.stopped).toMatchObject({ word: 'Stopped', ring: 'dashed', lampHollow: true })
+    expect(shapes.running).toMatchObject({ word: 'Running', ring: 'solid', lampHollow: false, lampTurned: false })
+    expect(shapes.error).toMatchObject({ word: 'Error', ring: 'solid', lampTurned: true }) // a diamond
+    expect(shapes.error.lampRadius).not.toBe(shapes.running.lampRadius) // square-ish, not round
+  } finally {
+    await driver.close()
+    await removeUserData(driver.userDataDir)
   }
 })

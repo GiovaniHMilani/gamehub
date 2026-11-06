@@ -22,27 +22,53 @@ function toastFailure(operation: Operation, code: Parameters<typeof describeFail
 
 const OPERATION: Readonly<Record<'start' | 'stop' | 'restart', Operation>> = { start: 'start', stop: 'stop', restart: 'restart' }
 
-/** Start, stop, restart, open (navigate) and remove (asks for confirmation first). */
-export async function performInstanceAction(api: Api, instanceId: string, action: InstanceAction): Promise<void> {
+/**
+ * Start, stop, restart, open (navigate) and remove (asks for confirmation first).
+ * Resolves to whether the request was carried out: a duplicate click or a refusal is `false`.
+ */
+export async function performInstanceAction(api: Api, instanceId: string, action: InstanceAction): Promise<boolean> {
   if (action === 'open') {
     ui().openInstance(instanceId)
-    return
+    return true
   }
   if (action === 'remove') {
     ui().openDialog({ kind: 'confirmRemove', instanceId })
-    return
+    return true
   }
   // The same action twice is ignored; a different one (Cancel while starting) must stay possible.
-  if (ui().pending[instanceId] === action) return
+  if (ui().pending[instanceId] === action) return false
   ui().setPending(instanceId, action)
   try {
     const result: Result<InstanceSummary> = await api.instances[action](instanceId)
     if (!result.ok) toastFailure(OPERATION[action], result.error.code)
+    return result.ok
   } catch {
     toastFailure(OPERATION[action], 'INTERNAL')
+    return false
   } finally {
     ui().setPending(instanceId, null)
   }
+}
+
+/**
+ * The game's main verb, and the button says which one it is:
+ *  - something is running: "Open". It only takes the user to those accounts (the grid when there are
+ *    several) and starts NOTHING. Starting the others is a choice made account by account.
+ *  - nothing is running: "Play". It starts every stopped account, then takes the user to Play.
+ * It never starts an account in error or crashed (that is Retry, a deliberate choice), and a failed
+ * start has already told the user why.
+ */
+export async function playGame(api: Api, gameId: string): Promise<void> {
+  const ids = useDomainStore.getState().accountIdsByGame[gameId] ?? []
+  const statusOf = (id: string) => useDomainStore.getState().instancesById[id]?.status
+  const running = ids.filter((id) => statusOf(id) === 'running')
+  const toStart = running.length > 0 ? [] : ids.filter((id) => statusOf(id) === 'stopped')
+  const started = await Promise.all(toStart.map(async (id) => ((await performInstanceAction(api, id, 'start')) ? id : null)))
+  const ready = [...running, ...started.filter((id): id is string => id !== null)]
+  const first = ready[0]
+  if (first === undefined) return
+  ui().openInstance(first)
+  if (ready.length > 1) ui().setPlayMode('grid')
 }
 
 /** After the user confirmed in the dialog. */
