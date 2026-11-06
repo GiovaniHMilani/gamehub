@@ -63,6 +63,22 @@ account was **ignored** — the child still used the opener's session.
 **Decision:** OAuth popups stay in the account's partition by construction.
 The Phase 2/6 test still asserts it, to catch Electron behavior changes.
 
+## S6 — Cookies without expiry across a restart (found in the vertical slice)
+
+**Observed** (`tests/e2e/persistence.spec.ts`, Electron 45.2.3): after a graceful
+quit and relaunch of the same `userData`:
+- cookie with `max-age`, localStorage, IndexedDB: **restored**, per account;
+- cookie **without expiry** (session cookie): **not restored** (`null` in both
+  accounts). This is standard Chromium behavior, not a GameHub bug.
+
+**Impact:** a game that keeps its login only in a session cookie logs the user
+out on every GameHub restart, even with a persistent partition. Games that use
+persistent cookies/localStorage/tokens are unaffected.
+
+**Not changed:** the only known workarounds (rewriting session cookies with an
+expiry from the Main process) mean managing cookies manually, which CLAUDE.md §2
+and ADR-0003 forbid. Needs an explicit decision; see the slice report.
+
 ## Deferred
 
 - Background throttling semantics with `setBackgroundThrottling(false)` on a

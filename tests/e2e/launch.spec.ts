@@ -5,7 +5,7 @@ test('app launches the shell window with an isolated userData dir', async () => 
   const { app, userDataDir } = await launchApp()
   try {
     const window = await app.firstWindow()
-    await expect(window.getByTestId('app-root')).toHaveText('GameHub')
+    await expect(window.getByTestId('app-title')).toHaveText('GameHub')
 
     const userData = await app.evaluate(({ app: electronApp }) => electronApp.getPath('userData'))
     expect(userData).toBe(userDataDir)
@@ -42,7 +42,7 @@ test('shell renderer has no Node.js access', async () => {
       process: typeof (globalThis as Record<string, unknown>)['process'],
       gamehubKeys: Object.keys((globalThis as unknown as { gamehub: object }).gamehub),
     }))
-    expect(exposure).toEqual({ require: 'undefined', process: 'undefined', gamehubKeys: [] })
+    expect(exposure).toEqual({ require: 'undefined', process: 'undefined', gamehubKeys: ['games', 'instances'] })
   } finally {
     await app.close()
     await removeUserData(userDataDir)

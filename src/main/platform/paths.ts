@@ -9,6 +9,16 @@ import { isAbsolute, join } from 'node:path'
  *   real account sessions.
  * - Production: Electron's default (derived from productName "GameHub").
  */
+/** Directory for structured logs. Packaged: OS log dir; dev/tests: inside userData. */
+export function logsDirectory(): string {
+  return app.isPackaged ? app.getPath('logs') : join(app.getPath('userData'), 'logs')
+}
+
+/** SQL migrations live at <app root>/drizzle, next to `out/` (also true inside the asar). */
+export function migrationsDirectory(): string {
+  return join(import.meta.dirname, '../../drizzle')
+}
+
 export function configureUserDataPath(): void {
   const override = process.env['GAMEHUB_USER_DATA_DIR']
   if (override !== undefined && override !== '') {

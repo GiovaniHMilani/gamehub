@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GameHub Session Test</title>
+  </head>
+  <body>
+    <h1>GameHub Session Test</h1>
+    <dl>
+      <dt>Profile marker (random, created once per browser profile)</dt>
+      <dd id="marker">…</dd>
+      <dt>Cookie</dt>
+      <dd id="cookie">…</dd>
+      <dt>Session cookie (no expiry)</dt>
+      <dd id="session-cookie">…</dd>
+      <dt>Cookie as seen by the server</dt>
+      <dd id="server-cookie">…</dd>
+      <dt>localStorage</dt>
+      <dd id="local-storage">…</dd>
+      <dt>IndexedDB</dt>
+      <dd id="indexeddb">…</dd>
+    </dl>
+    <script>
+      const DB = 'gamehub-session-test'
+      const STORE = 'kv'
+
+      function readCookie(name) {
+        const hit = document.cookie.split('; ').find((c) => c.startsWith(name + '='))
+        return hit ? decodeURIComponent(hit.slice(name.length + 1)) : null
+      }
+
+      function openDb() {
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(DB, 1)
+          req.onupgradeneeded = () => req.result.createObjectStore(STORE)
+          req.onsuccess = () => resolve(req.result)
+          req.onerror = () => reject(req.error)
+        })
+      }
+      async function idbGet(key) {
+        const db = await openDb()
+        return new Promise((resolve, reject) => {
+          const req = db.transaction(STORE).objectStore(STORE).get(key)
+          req.onsuccess = () => { db.close(); resolve(req.result ?? null) }
+          req.onerror = () => { db.close(); reject(req.error) }
+        })
+      }
+      async function idbSet(key, value) {
+        const db = await openDb()
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE, 'readwrite')
+          tx.objectStore(STORE).put(value, key)
+          tx.oncomplete = () => { db.close(); resolve() }
+          tx.onerror = () => { db.close(); reject(tx.error) }
+        })
+      }
+
+      // Each browser profile gets its own marker the first time it loads the page.
+      if (localStorage.getItem('marker') === null) localStorage.setItem('marker', crypto.randomUUID())
+
+      /** Reads every storage mechanism and what the server receives. */
+      async function snapshot() {
+        const server = await fetch('/whoami', { cache: 'no-store' }).then((r) => r.json())
+        return {
+          marker: localStorage.getItem('marker'),
+          cookie: readCookie('identity'),
+          sessionCookie: readCookie('session_identity'),
+          serverCookie: server.identity,
+          localStorage: localStorage.getItem('identity'),
+          indexedDB: await idbGet('identity'),
+        }
+      }
+
+      async function render() {
+        const s = await snapshot()
+        const show = (id, v) => { document.getElementById(id).textContent = v === null ? '(none)' : v }
+        show('marker', s.marker)
+        show('cookie', s.cookie)
+        show('session-cookie', s.sessionCookie)
+        show('server-cookie', s.serverCookie)
+        show('local-storage', s.localStorage)
+        show('indexeddb', s.indexedDB)
+        return s
+      }
+
+      /** Writes one identity into cookie, session cookie, localStorage and IndexedDB. */
+      async function setIdentity(value) {
+        const v = encodeURIComponent(value)
+        document.cookie = 'identity=' + v + '; path=/; max-age=31536000; SameSite=Lax'
+        document.cookie = 'session_identity=' + v + '; path=/; SameSite=Lax'
+        localStorage.setItem('identity', value)
+        await idbSet('identity', value)
+        return render()
+      }
+
+      window.snapshot = snapshot
+      window.setIdentity = setIdentity
+      render().then(() => { document.body.dataset.ready = 'true' })
+    </script>
+  </body>
+</html>

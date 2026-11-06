@@ -3,6 +3,18 @@
 Target: 1 game × 4 accounts, macOS + Windows, no auto-update.
 Each phase ends with typecheck + phase tests + a report of what was verified.
 
+## Status
+
+- Phase 0 — done.
+- Vertical slice (2, 3, 4 and the parts of 1, 5, 6 it needs) — done: domain,
+  SQLite + Drizzle, SessionManager, InstanceManager (state machine, per-instance
+  queue), WindowManager, typed IPC + preload, restore, tombstones, structured
+  logging, isolation/persistence/removal/lifecycle/security E2E tests.
+- Not done yet: `app://` protocol for the shell (shell still loads from
+  `file://`), event `seq` for snapshot consistency, OAuth popups, allowed-origin
+  editing, renderer-driven layout (MainWindow/LayoutController split), real UI,
+  measurement, packaging.
+
 | Phase | Deliverable | Exit criteria |
 |---|---|---|
 | 0 — Foundation + spikes | gitignore fix, electron-vite, TS strict, lint boundaries, Vitest, Playwright, empty window; spikes (see `spikes.md`) | app opens; unit + E2E launch tests pass; spikes documented |
